@@ -22,6 +22,12 @@
                        template="Tweakwise_Magento2Tweakwise::product/list/linked-item.phtml"
                        ifconfig="tweakwise/merchandising_builder/personal_merchandising/enabled"/>
             </block>
+            <block class="Magento\Framework\View\Element\Template" name="magento2tweakwise.list.analytics" template="Tweakwise_Magento2Tweakwise::analytics.phtml" ifconfig="tweakwise/merchandising_builder/personal_merchandising/analytics_enabled">
+                <arguments>
+                    <argument name="viewModel" xsi:type="object">Tweakwise\Magento2Tweakwise\ViewModel\PersonalMerchandisingAnalytics</argument>
+                    <argument name="analyticsType" xsi:type="string">itemclick</argument>
+                </arguments>
+            </block>
         </referenceContainer>
         <referenceBlock name="category.products.list">
             <arguments>

@@ -55,6 +55,11 @@ class Analytics extends Action
             } elseif ($type === 'search') {
                 $tweakwiseRequest->setParameter('searchTerm', $value);
                 $tweakwiseRequest->setPath('search');
+            } elseif ($type === 'itemclick') {
+                $twRequestId = $this->getRequest()->getParam('twRequestId');
+                $tweakwiseRequest->setParameter('requestId', $twRequestId);
+                $tweakwiseRequest->setParameter('itemId', $value);
+                $tweakwiseRequest->setPath('itemclick');
             }
 
             if (!empty($tweakwiseRequest->getPath())) {
