@@ -37,7 +37,11 @@
             </arguments>
             <block class="Magento\Catalog\Block\Product\AbstractProduct"
                    name="tweakwise.catalog.product.list.item"
-                   template="Tweakwise_Magento2Tweakwise::product/list/item.phtml"/>
+                   template="Tweakwise_Magento2Tweakwise::product/list/item.phtml">
+            </block>
+            <block class="Magento\Catalog\Block\Product\AbstractProduct"
+                   name="tweakwise.catalog.product.list.id"
+                   template="Tweakwise_Magento2Tweakwise::product/item-id.phtml"/>
             <block class="Magento\Catalog\Block\Product\AbstractProduct"
                    name="tweakwise.catalog.product.list.visual"
                    template="Tweakwise_Magento2Tweakwise::product/list/visual.phtml"/>

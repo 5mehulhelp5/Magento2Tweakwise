@@ -121,6 +121,9 @@ class ProductListItem implements ArgumentInterface
             return '';
         }
 
+        $itemIdBlock = $parentBlock->getChildBlock('tweakwise.catalog.product.item.id');
+        $itemIdHtml = $itemIdBlock ? $itemIdBlock->toHtml() : '';
+
         $detailsRenderers = $parentBlock->getChildBlock('details.renderers');
         if ($detailsRenderers) {
             $itemRendererBlock->setChild('details.renderers', $detailsRenderers);
@@ -136,7 +139,7 @@ class ProductListItem implements ArgumentInterface
             ->setData('output_helper', $parentBlock->getData('outputHelper'))
             ->setData('template_type', $templateType);
 
-        return $itemRendererBlock->toHtml();
+        return $itemRendererBlock->toHtml() . $itemIdHtml;
     }
 
     /**

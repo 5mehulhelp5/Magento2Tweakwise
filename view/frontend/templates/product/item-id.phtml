@@ -1,0 +1,21 @@
+<?php
+
+/**
+ * @var AbstractProduct $block
+ * @var Escaper $escaper
+ */
+
+/** @var Product $product */
+
+use Magento\Catalog\Block\Product\AbstractProduct;
+use Magento\Framework\Escaper;
+
+$_product = $block->getData('product');
+if (!$_product) {
+    //return;
+}
+
+?>
+<div class="tw-item-id" data-item-id="<?= $escaper->escapeHtmlAttr($_product->getId())?>">
+sfdsfdsfdsdf
+</div>
