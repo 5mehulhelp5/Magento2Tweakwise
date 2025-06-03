@@ -27,6 +27,10 @@ define([
             isLoading: false,
             ajaxCache: true,
             urlStrategy: '',
+            twRequestId: '',
+            analyticsEvents: false,
+            productSelector: '.product-item-info',
+            analyticsEndpoint: '/tweakwise/ajax/analytics',
         },
 
         currentXhr: null,
@@ -65,9 +69,47 @@ define([
         _hookEvents: function () {
             this._bindFilterClickEvents();
             this._bindFilterRemoveEvents();
+            this._bindItemClickEvents();
 
             if (this.options.ajaxFilters) {
                 this._bindPopChangeHandler();
+            }
+        },
+
+        _bindItemClickEvents: function () {
+            if (this.options.analyticsEvents) {
+                var productlist = $(this.options.productListSelector);
+                productlist.on('click', $(this.options.productsGridSelector), function (event) {
+                    event.preventDefault();
+                    var product = $(event.target).closest('.' + this.options.productSelector)[0];
+                    product.id = product.id.replace(this.options.productSelector +'_', '');
+                    console.log('Product clicked', product.id);
+
+
+                    //send async ajax request to the analytics endpoint
+                    $.ajax({
+                        url: this.options.analyticsEndpoint,
+                        type: 'POST',
+                        data: {
+                            productId: product.id,
+                            requestId: this.options.twRequestId
+                        },
+                        cache: false,
+                        success: function (response) {
+                            console.log('Analytics event sent successfully', response);
+                        },
+                        error: function (jqXHR, textStatus, errorThrown) {
+                            console.error('Error sending analytics event', textStatus, errorThrown);
+                        }
+                    });
+
+                    //navigate to event target href
+                    var href = this._findHref($(event.target));
+                    if (href) {
+                        //window.location.href = href;
+                    }
+
+                }.bind(this));
             }
         },
 

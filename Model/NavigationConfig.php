@@ -131,6 +131,10 @@ class NavigationConfig implements ArgumentInterface, FilterFormInputProviderInte
                 QueryParameterStrategy::class
                     ? 'queryparameter'
                     : 'path',
+                'twRequestId' => $this->currentNavigationContext->getTweakwiseRequestId(),
+                'analyticsEvents' => $this->config->isPersonalMerchandisingActive(),
+                'productSelector' => 'product-item-info',
+                'analyticsEndpoint' => $this->getAnalyticsEndPoint(),
             ],
         ];
         if ($this->config->isPersonalMerchandisingActive()) {
@@ -225,6 +229,11 @@ class NavigationConfig implements ArgumentInterface, FilterFormInputProviderInte
     protected function getAjaxEndPoint()
     {
         return $this->url->getUrl('tweakwise/ajax/navigation');
+    }
+
+    protected function getAnalyticsEndPoint(): string
+    {
+        return $this->url->getUrl('tweakwise/ajax/analytics');
     }
 
     public function getNavigationContext()

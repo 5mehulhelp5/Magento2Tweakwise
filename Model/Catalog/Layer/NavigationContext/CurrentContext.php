@@ -62,4 +62,11 @@ class CurrentContext
     {
         return $this->getContext()->getResponse();
     }
+
+    public function getTweakwiseRequestId(): string
+    {
+        $headers = $this->getContext()->getResponse()->getValue('headers');
+
+        return $headers['TWN-Request-ID'][0] ?? '';
+    }
 }
