@@ -8,6 +8,7 @@ use Magento\Catalog\Api\CategoryRepositoryInterface;
 use Magento\Catalog\Block\Product\Context;
 use Magento\Catalog\Block\Product\ListProduct as MagentoListProduct;
 use Magento\Catalog\Helper\Output as OutputHelper;
+use Magento\Catalog\Pricing\Price\SpecialPriceBulkResolverInterface;
 use Magento\Catalog\Model\Layer;
 use Magento\Catalog\Model\Layer\Resolver;
 use Magento\Framework\App\RequestInterface;
@@ -33,6 +34,7 @@ class ListProduct extends MagentoListProduct
      * @param RequestInterface $request
      * @param array $data
      * @param OutputHelper|null $outputHelper
+     * @param SpecialPriceBulkResolverInterface|null $specialPriceBulkResolver
      * @param Layer|null $catalogLayer
      */
     public function __construct(
@@ -48,6 +50,7 @@ class ListProduct extends MagentoListProduct
         private readonly RequestInterface $request,
         array $data = [],
         ?OutputHelper $outputHelper = null,
+        ?SpecialPriceBulkResolverInterface $specialPriceBulkResolver = null,
         ?Layer $catalogLayer = null
     ) {
         parent::__construct(
@@ -57,7 +60,8 @@ class ListProduct extends MagentoListProduct
             $categoryRepository,
             $urlHelper,
             $data,
-            $outputHelper
+            $outputHelper,
+            $specialPriceBulkResolver
         );
         if ($catalogLayer) {
             $this->_catalogLayer = $catalogLayer;
