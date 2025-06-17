@@ -6,5 +6,4 @@ use Magento\Framework\View\Element\Template;
 
 class ProductCode extends Template
 {
-
 }

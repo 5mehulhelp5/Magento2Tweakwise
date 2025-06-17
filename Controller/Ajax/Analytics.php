@@ -13,6 +13,8 @@ use Tweakwise\Magento2Tweakwise\Model\Client\RequestFactory;
 use Magento\Framework\App\ResponseInterface;
 use Magento\Framework\Controller\Result\Json;
 use Magento\Framework\Controller\ResultInterface;
+use Tweakwise\Magento2TweakwiseExport\Model\Helper;
+use Magento\Store\Model\StoreManagerInterface;
 
 class Analytics extends Action
 {
@@ -30,7 +32,9 @@ class Analytics extends Action
         private JsonFactory $resultJsonFactory,
         private Client $client,
         private PersonalMerchandisingConfig $config,
-        private RequestFactory $requestFactory
+        private RequestFactory $requestFactory,
+        private Helper $helper,
+        private StoreManagerInterface $storeManager,
     ) {
         parent::__construct($context);
     }
@@ -48,6 +52,7 @@ class Analytics extends Action
             $tweakwiseRequest = $this->requestFactory->create();
             $tweakwiseRequest->setProfileKey($profileKey);
             $value = $this->getRequest()->getParam('value');
+            $storeId = (int)$this->storeManager->getStore()->getId();
 
             if ($type === 'product') {
                 $tweakwiseRequest->setParameter('productKey', $value);
@@ -56,7 +61,11 @@ class Analytics extends Action
                 $tweakwiseRequest->setParameter('searchTerm', $value);
                 $tweakwiseRequest->setPath('search');
             } elseif ($type === 'itemclick') {
-                $twRequestId = $this->getRequest()->getParam('twRequestId');
+                if (ctype_digit($value)) {
+                    $value = $this->helper->getTweakwiseId($storeId, $value);
+                }
+
+                $twRequestId = $this->getRequest()->getParam('requestId');
                 $tweakwiseRequest->setParameter('requestId', $twRequestId);
                 $tweakwiseRequest->setParameter('itemId', $value);
                 $tweakwiseRequest->setPath('itemclick');

@@ -80,37 +80,71 @@ define([
             if (this.options.analyticsEvents) {
                 var productlist = $(this.options.productListSelector);
                 productlist.on('click', $(this.options.productsGridSelector), function (event) {
-                    event.preventDefault();
-                    var product = $(event.target).closest('.' + this.options.productSelector)[0];
-                    product.id = product.id.replace(this.options.productSelector +'_', '');
-                    console.log('Product clicked', product.id);
-
-
-                    //send async ajax request to the analytics endpoint
-                    $.ajax({
-                        url: this.options.analyticsEndpoint,
-                        type: 'POST',
-                        data: {
-                            productId: product.id,
-                            requestId: this.options.twRequestId
-                        },
-                        cache: false,
-                        success: function (response) {
-                            console.log('Analytics event sent successfully', response);
-                        },
-                        error: function (jqXHR, textStatus, errorThrown) {
-                            console.error('Error sending analytics event', textStatus, errorThrown);
+                    try {
+                        if (!this.options.twRequestId) {
+                            console.log(
+                                'Tweakwise request ID is set, skipping product click event');
+                            return;
                         }
-                    });
 
-                    //navigate to event target href
-                    var href = this._findHref($(event.target));
-                    if (href) {
-                        //window.location.href = href;
+                        var product = $(event.target).closest(
+                            '.' + this.options.productSelector)[0];
+                        if (!product || !product.id) {
+                            var visual = $(event.target).closest('.visual');
+                            if (!visual.length) {
+                                var link = $(event.target).closest('a');
+                                if (link.length) {
+                                    visual = link.find('.visual');
+                                }
+
+                                if (!visual.length) {
+                                    console.log(
+                                        'No product visual found, skipping product click event');
+                                    return;
+                                }
+                            }
+                            product.id = visual.id;
+                        } else {
+                            product.id = product.id.replace(
+                                this.options.productSelector + '_', '');
+                        }
+
+                        if (!product.id) {
+                            console.log(
+                                'Product ID not found, skipping product click event');
+                            return;
+                        }
+
+                        console.log('Product clicked', product.id);
+
+                        //send async ajax request to the analytics endpoint
+                        $.ajax({
+                            url: this.options.analyticsEndpoint,
+                            type: 'POST',
+                            data: {
+                                type: 'itemclick',
+                                value: product.id,
+                                requestId: this.options.twRequestId
+                            },
+                            cache: false,
+                            success: function (response) {
+                                console.log('Analytics event sent successfully',
+                                    response);
+                            },
+                            error: function (jqXHR, textStatus, errorThrown) {
+                                console.error('Error sending analytics event',
+                                    textStatus, errorThrown);
+                            }
+                        });
+
+                        return;
+                    } catch (error) {
+                        return;
                     }
-
                 }.bind(this));
             }
+
+            return;
         },
 
         /**
