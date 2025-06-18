@@ -47,7 +47,7 @@ class TweakwiseCheckout implements ObserverInterface
     {
         if ($this->config->isAnalyticsEnabled()) {
             $order = $observer->getEvent()->getOrder();
-            $totalExclTax = $order->getBaseSubtotal();
+            $totalExclTax = (float)$order->getBaseSubtotal();
             // Get the order items
             $items = $order->getAllItems();
 
