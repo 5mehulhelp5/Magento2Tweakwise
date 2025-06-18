@@ -14,7 +14,7 @@ use Tweakwise\Magento2Tweakwise\Model\Client\Type\Type;
 /**
  * @method int getFacetId();
  * @method string getTitle();
- * @method int getSource();
+ * @method string getSource();
  */
 class SettingsType extends Type
 {
