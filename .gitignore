@@ -4,5 +4,3 @@
 
 /build/local.env
 /build/data
-.eslintrc.json
-.eslintignore
