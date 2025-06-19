@@ -15,6 +15,7 @@ use Magento\Framework\Controller\Result\Json;
 use Magento\Framework\Controller\ResultInterface;
 use Tweakwise\Magento2TweakwiseExport\Model\Helper;
 use Magento\Store\Model\StoreManagerInterface;
+use InvalidArgumentException;
 
 class Analytics extends Action
 {
@@ -26,15 +27,17 @@ class Analytics extends Action
      * @param Client                      $client
      * @param PersonalMerchandisingConfig $config
      * @param RequestFactory              $requestFactory
+     * @param Helper                      $helper
+     * @param StoreManagerInterface       $storeManager
      */
     public function __construct(
         private Context $context,
         private JsonFactory $resultJsonFactory,
         private Client $client,
         private PersonalMerchandisingConfig $config,
-        private RequestFactory $requestFactory,
-        private Helper $helper,
-        private StoreManagerInterface $storeManager,
+        private readonly RequestFactory $requestFactory,
+        private readonly Helper $helper,
+        private readonly StoreManagerInterface $storeManager,
     ) {
         parent::__construct($context);
     }
@@ -45,47 +48,74 @@ class Analytics extends Action
     public function execute()
     {
         $result = $this->resultJsonFactory->create();
-        if ($this->config->isAnalyticsEnabled()) {
-            $type = $this->getRequest()->getParam('type');
-            $profileKey = $this->config->getProfileKey();
 
-            $tweakwiseRequest = $this->requestFactory->create();
-            $tweakwiseRequest->setProfileKey($profileKey);
-            $value = $this->getRequest()->getParam('value');
-            $storeId = (int)$this->storeManager->getStore()->getId();
+        if (!$this->config->isAnalyticsEnabled()) {
+            return $result->setData(['success' => false, 'message' => 'Analytics is disabled.']);
+        }
 
-            if ($type === 'product') {
-                $tweakwiseRequest->setParameter('productKey', $value);
-                $tweakwiseRequest->setPath('pageview');
-            } elseif ($type === 'search') {
-                $tweakwiseRequest->setParameter('searchTerm', $value);
-                $tweakwiseRequest->setPath('search');
-            } elseif ($type === 'itemclick') {
-                if (ctype_digit($value)) {
-                    $value = $this->helper->getTweakwiseId($storeId, $value);
-                }
+        $type = $this->getRequest()->getParam('type');
+        $value = $this->getRequest()->getParam('value');
 
-                $twRequestId = $this->getRequest()->getParam('requestId');
-                $tweakwiseRequest->setParameter('requestId', $twRequestId);
-                $tweakwiseRequest->setParameter('itemId', $value);
-                $tweakwiseRequest->setPath('itemclick');
+        if (empty($type) || empty($value)) {
+            return $result->setData(['success' => false, 'message' => 'Missing required parameters.']);
+        }
+
+        $profileKey = $this->config->getProfileKey();
+        $tweakwiseRequest = $this->requestFactory->create();
+        $tweakwiseRequest->setProfileKey($profileKey);
+        $storeId = (int)$this->storeManager->getStore()->getId();
+
+        try {
+            switch ($type) {
+                case 'product':
+                    $this->handleProductType($tweakwiseRequest, $value);
+                    break;
+                case 'search':
+                    $this->handleSearchType($tweakwiseRequest, $value);
+                    break;
+                case 'itemclick':
+                    $this->handleItemClickType($tweakwiseRequest, $value, $storeId);
+                    break;
+                default:
+                    return $result->setData(['success' => false, 'message' => 'Invalid type parameter.']);
             }
 
-            if (!empty($tweakwiseRequest->getPath())) {
-                try {
-                    $this->client->request($tweakwiseRequest);
-                    $result->setData(['success' => true]);
-                } catch (\Exception $e) {
-                    $result->setData(
-                        [
-                            'success' => false,
-                            'message' => $e->getMessage()
-                        ]
-                    );
-                }
-            }
+            $this->client->request($tweakwiseRequest);
+            $result->setData(['success' => true]);
+        } catch (\InvalidArgumentException $e) {
+            $result->setData(['success' => false, 'message' => $e->getMessage()]);
+        } catch (\Exception $e) {
+            $result->setData(['success' => false, 'message' => $e->getMessage()]);
         }
 
         return $result;
+    }
+
+    private function handleProductType($tweakwiseRequest, $value)
+    {
+        $tweakwiseRequest->setParameter('productKey', $value);
+        $tweakwiseRequest->setPath('pageview');
+    }
+
+    private function handleSearchType($tweakwiseRequest, $value)
+    {
+        $tweakwiseRequest->setParameter('searchTerm', $value);
+        $tweakwiseRequest->setPath('search');
+    }
+
+    private function handleItemClickType($tweakwiseRequest, $value, $storeId)
+    {
+        $twRequestId = $this->getRequest()->getParam('requestId');
+        if (empty($twRequestId)) {
+            throw new InvalidArgumentException('Missing requestId for itemclick.');
+        }
+
+        if (ctype_digit($value)) {
+            $value = $this->helper->getTweakwiseId($storeId, $value);
+        }
+
+        $tweakwiseRequest->setParameter('requestId', $twRequestId);
+        $tweakwiseRequest->setParameter('itemId', $value);
+        $tweakwiseRequest->setPath('itemclick');
     }
 }
