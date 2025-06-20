@@ -92,9 +92,9 @@ define([
                     let productId;
 
                     if (!product || !product.id) {
-                        var visual = $(event.target).closest('.visual');
+                        const visual = $(event.target).closest('.visual');
                         if (!visual.length) {
-                            var link = $(event.target).closest('a');
+                            const link = $(event.target).closest('a');
                             if (link.length) {
                                 visual = link.find('.visual');
                             }
