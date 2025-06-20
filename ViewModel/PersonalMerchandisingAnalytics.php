@@ -106,7 +106,7 @@ class PersonalMerchandisingAnalytics implements ArgumentInterface
      * @param string $analyticsType
      * @return string
      */
-    public function getValue($analyticsType): string
+    public function getValue(string $analyticsType): string
     {
         switch ($analyticsType) {
             case 'product':
