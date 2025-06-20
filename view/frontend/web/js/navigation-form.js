@@ -81,15 +81,16 @@ define([
                 return;
             }
 
-            var productlist = $(this.options.productListSelector);
+            const productlist = $(this.options.productListSelector);
             productlist.on('click', $(this.options.productsGridSelector), function (event) {
                 try {
                     if (!this.options.twRequestId) {
                         return;
                     }
 
-                    var product = $(event.target).closest(
-                        '.' + this.options.productSelector)[0];
+                    const product = $(event.target).closest(`.${this.options.productSelector}`)[0];
+                    let productId;
+
                     if (!product || !product.id) {
                         var visual = $(event.target).closest('.visual');
                         if (!visual.length) {
@@ -102,10 +103,9 @@ define([
                                 return;
                             }
                         }
-                        var productId = visual.attr('id');
+                        productId = visual.attr('id');
                     } else {
-                        var productId = product.id.replace(
-                            this.options.productSelector + '_', '');
+                        productId = product.id.replace(`${this.options.productSelector}_`, '');
                     }
 
                     if (!productId) {
