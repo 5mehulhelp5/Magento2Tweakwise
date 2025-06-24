@@ -108,21 +108,11 @@ class PersonalMerchandisingAnalytics implements ArgumentInterface
      */
     public function getValue(string $analyticsType): string
     {
-        switch ($analyticsType) {
-            case 'product':
-                $value = $this->getProductKey();
-                break;
-            case 'search':
-                $value = $this->getSearchQuery();
-                break;
-            case 'itemclick':
-                $value = $this->getTwRequestId();
-                break;
-            default:
-                $value = '';
-                break;
-        }
-
-        return $value;
+        return match ($analyticsType) {
+            'product'   => $this->getProductKey(),
+            'search'    => $this->getSearchQuery(),
+            'itemclick' => $this->getTwRequestId(),
+            default     => '',
+        };
     }
 }
