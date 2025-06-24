@@ -11,15 +11,11 @@ use Tweakwise\Magento2Tweakwise\Model\Client\RequestFactory;
 use Magento\Framework\App\ResponseInterface;
 use Magento\Framework\Controller\Result\Json;
 use Magento\Framework\Controller\ResultInterface;
-<<<<<<< HEAD
 use Tweakwise\Magento2TweakwiseExport\Model\Helper;
 use Magento\Store\Model\StoreManagerInterface;
-use InvalidArgumentException;
 use Exception;
 use Tweakwise\Magento2Tweakwise\Model\Client\Request;
-=======
 use Magento\Framework\Serialize\Serializer\Json as JsonSerializer;
->>>>>>> beta
 
 class Analytics extends Action
 {
@@ -31,61 +27,48 @@ class Analytics extends Action
      * @param Client                      $client
      * @param PersonalMerchandisingConfig $config
      * @param RequestFactory              $requestFactory
-<<<<<<< HEAD
      * @param Helper                      $helper
      * @param StoreManagerInterface       $storeManager
-=======
      * @param JsonSerializer              $jsonSerializer
->>>>>>> beta
      */
     public function __construct(
         private Context $context,
         private JsonFactory $resultJsonFactory,
         private Client $client,
         private PersonalMerchandisingConfig $config,
-<<<<<<< HEAD
         private readonly RequestFactory $requestFactory,
         private readonly Helper $helper,
         private readonly StoreManagerInterface $storeManager,
-=======
-        private RequestFactory $requestFactory,
         private readonly JsonSerializer $jsonSerializer
->>>>>>> beta
     ) {
         parent::__construct($context);
     }
 
     /**
      * @return ResponseInterface|Json|ResultInterface
+     * @phpcs:disable Generic.Metrics.CyclomaticComplexity.TooHigh
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
+     * @SuppressWarnings(PHPMD.NPathComplexity)
      */
     public function execute()
     {
         $result = $this->resultJsonFactory->create();
-<<<<<<< HEAD
+        $result->setData(['success' => false, 'message' => 'Invalid request.']);
 
         if (!$this->config->isAnalyticsEnabled()) {
             return $result->setData(['success' => false, 'message' => 'Analytics is disabled.']);
         }
-=======
-        if ($this->config->isAnalyticsEnabled()) {
-            $request = $this->getRequest();
-            $type = $request->getParam('type');
-            $value = $request->getParam('value');
-            $profileKey = $this->config->getProfileKey();
 
-            //hyva theme
-            if (empty($type)) {
-                $content = $this->jsonSerializer->unserialize($request->getContent());
-                $type = $content['type'] ?? null;
-                $value = $content['value'] ?? null;
-            }
-
-            $tweakwiseRequest = $this->requestFactory->create();
-            $tweakwiseRequest->setProfileKey($profileKey);
->>>>>>> beta
-
+        $request = $this->getRequest();
         $type = $this->getRequest()->getParam('type');
         $value = $this->getRequest()->getParam('value');
+
+        //hyva theme
+        if (empty($type)) {
+            $content = $this->jsonSerializer->unserialize($request->getContent());
+            $type = $content['type'] ?? null;
+            $value = $content['value'] ?? null;
+        }
 
         if (empty($type) || empty($value)) {
             return $result->setData(['success' => false, 'message' => 'Missing required parameters.']);
@@ -112,11 +95,9 @@ class Analytics extends Action
             }
 
             $this->client->request($tweakwiseRequest);
-            $result->setData(['success' => true]);
-        } catch (InvalidArgumentException $e) {
-            $result->setData(['success' => false, 'message' => $e->getMessage()]);
+            return $result->setData(['success' => true]);
         } catch (Exception $e) {
-            $result->setData(['success' => false, 'message' => $e->getMessage()]);
+            return $result->setData(['success' => false, 'message' => $e->getMessage()]);
         }
 
         return $result;
