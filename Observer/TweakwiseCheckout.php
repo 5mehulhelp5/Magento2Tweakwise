@@ -47,26 +47,29 @@ class TweakwiseCheckout implements ObserverInterface
     {
         if ($this->config->isAnalyticsEnabled()) {
             $order = $observer->getEvent()->getOrder();
+            $totalExclTax = (float)$order->getBaseSubtotal();
             // Get the order items
             $items = $order->getAllItems();
 
-            $this->sendCheckout($items);
+            $this->sendCheckout($items, $totalExclTax);
         }
     }
 
     /**
      * @param Items $items
+     * @param float $totalExclTax
      *
      * @return void
      * @throws \Magento\Framework\Exception\NoSuchEntityException
      */
-    private function sendCheckout($items): void
+    private function sendCheckout($items, float $totalExclTax): void
     {
         $storeId = (int)$this->storeManager->getStore()->getId();
         $profileKey = $this->config->getProfileKey();
         $tweakwiseRequest = $this->requestFactory->create();
 
         $tweakwiseRequest->setParameter('profileKey', $profileKey);
+        $tweakwiseRequest->setParameter('revenue', (string)$totalExclTax);
         $tweakwiseRequest->setPath('purchase');
 
         foreach ($items as $item) {

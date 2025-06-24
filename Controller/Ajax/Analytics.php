@@ -7,17 +7,19 @@ use Magento\Framework\App\Action\Context;
 use Magento\Framework\Controller\Result\JsonFactory;
 use Tweakwise\Magento2Tweakwise\Model\Client;
 use Tweakwise\Magento2Tweakwise\Model\PersonalMerchandisingConfig;
-use Magento\Framework\Stdlib\Cookie\PublicCookieMetadata;
-use Magento\Framework\Stdlib\CookieManagerInterface;
 use Tweakwise\Magento2Tweakwise\Model\Client\RequestFactory;
 use Magento\Framework\App\ResponseInterface;
 use Magento\Framework\Controller\Result\Json;
 use Magento\Framework\Controller\ResultInterface;
+<<<<<<< HEAD
 use Tweakwise\Magento2TweakwiseExport\Model\Helper;
 use Magento\Store\Model\StoreManagerInterface;
 use InvalidArgumentException;
 use Exception;
 use Tweakwise\Magento2Tweakwise\Model\Client\Request;
+=======
+use Magento\Framework\Serialize\Serializer\Json as JsonSerializer;
+>>>>>>> beta
 
 class Analytics extends Action
 {
@@ -29,17 +31,26 @@ class Analytics extends Action
      * @param Client                      $client
      * @param PersonalMerchandisingConfig $config
      * @param RequestFactory              $requestFactory
+<<<<<<< HEAD
      * @param Helper                      $helper
      * @param StoreManagerInterface       $storeManager
+=======
+     * @param JsonSerializer              $jsonSerializer
+>>>>>>> beta
      */
     public function __construct(
         private Context $context,
         private JsonFactory $resultJsonFactory,
         private Client $client,
         private PersonalMerchandisingConfig $config,
+<<<<<<< HEAD
         private readonly RequestFactory $requestFactory,
         private readonly Helper $helper,
         private readonly StoreManagerInterface $storeManager,
+=======
+        private RequestFactory $requestFactory,
+        private readonly JsonSerializer $jsonSerializer
+>>>>>>> beta
     ) {
         parent::__construct($context);
     }
@@ -50,10 +61,28 @@ class Analytics extends Action
     public function execute()
     {
         $result = $this->resultJsonFactory->create();
+<<<<<<< HEAD
 
         if (!$this->config->isAnalyticsEnabled()) {
             return $result->setData(['success' => false, 'message' => 'Analytics is disabled.']);
         }
+=======
+        if ($this->config->isAnalyticsEnabled()) {
+            $request = $this->getRequest();
+            $type = $request->getParam('type');
+            $value = $request->getParam('value');
+            $profileKey = $this->config->getProfileKey();
+
+            //hyva theme
+            if (empty($type)) {
+                $content = $this->jsonSerializer->unserialize($request->getContent());
+                $type = $content['type'] ?? null;
+                $value = $content['value'] ?? null;
+            }
+
+            $tweakwiseRequest = $this->requestFactory->create();
+            $tweakwiseRequest->setProfileKey($profileKey);
+>>>>>>> beta
 
         $type = $this->getRequest()->getParam('type');
         $value = $this->getRequest()->getParam('value');
