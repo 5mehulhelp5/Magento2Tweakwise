@@ -16,6 +16,7 @@ use Magento\Store\Model\StoreManagerInterface;
 use Exception;
 use Tweakwise\Magento2Tweakwise\Model\Client\Request;
 use Magento\Framework\Serialize\Serializer\Json as JsonSerializer;
+use InvalidArgumentException;
 
 class Analytics extends Action
 {
@@ -64,7 +65,7 @@ class Analytics extends Action
         $value = $this->getRequest()->getParam('value');
 
         //hyva theme
-        if (empty($type)) {
+        if (empty($type) && !empty($request->getContent())) {
             $content = $this->jsonSerializer->unserialize($request->getContent());
             $type = $content['type'] ?? null;
             $value = $content['value'] ?? null;
@@ -138,6 +139,13 @@ class Analytics extends Action
     private function handleItemClickType(Request $tweakwiseRequest, string $value, int $storeId): void
     {
         $twRequestId = $this->getRequest()->getParam('requestId');
+
+        //hyva theme
+        if (empty($twRequestId) && !empty($this->getRequest()->getContent())) {
+            $content = $this->jsonSerializer->unserialize($this->getRequest()->getContent());
+            $twRequestId = $content['requestId'] ?? null;
+        }
+
         if (empty($twRequestId)) {
             throw new InvalidArgumentException('Missing requestId for itemclick.');
         }
