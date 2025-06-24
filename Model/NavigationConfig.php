@@ -25,7 +25,7 @@ use Tweakwise\Magento2Tweakwise\Model\Catalog\Layer\Url\Strategy\QueryParameterS
 class NavigationConfig implements ArgumentInterface, FilterFormInputProviderInterface
 {
     /**
-     * @var Config
+     * @var PersonalMerchandisingConfig
      */
     protected $config;
 
@@ -66,7 +66,7 @@ class NavigationConfig implements ArgumentInterface, FilterFormInputProviderInte
 
     /**
      * NavigationConfig constructor.
-     * @param Config $config
+     * @param PersonalMerchandisingConfig $config
      * @param UrlInterface $url
      * @param CurrentContext $currentNavigationContext
      * @param ProductMetadataInterface $productMetadata
@@ -75,7 +75,7 @@ class NavigationConfig implements ArgumentInterface, FilterFormInputProviderInte
      * @param Http $request
      */
     public function __construct(
-        Config $config,
+        PersonalMerchandisingConfig $config,
         UrlInterface $url,
         CurrentContext $currentNavigationContext,
         ProductMetadataInterface $productMetadata,
@@ -132,7 +132,7 @@ class NavigationConfig implements ArgumentInterface, FilterFormInputProviderInte
                     ? 'queryparameter'
                     : 'path',
                 'twRequestId' => $this->currentNavigationContext->getTweakwiseRequestId(),
-                'analyticsEvents' => $this->config->isPersonalMerchandisingActive(),
+                'analyticsEvents' => $this->config->isAnalyticsEnabled(),
                 'productSelector' => 'product-item-info',
                 'analyticsEndpoint' => $this->getAnalyticsEndPoint(),
             ],
