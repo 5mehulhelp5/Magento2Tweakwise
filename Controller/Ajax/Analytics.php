@@ -47,9 +47,6 @@ class Analytics extends Action
 
     /**
      * @return ResponseInterface|Json|ResultInterface
-     * @phpcs:disable Generic.Metrics.CyclomaticComplexity.TooHigh
-     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
-     * @SuppressWarnings(PHPMD.NPathComplexity)
      */
     public function execute()
     {
@@ -81,27 +78,45 @@ class Analytics extends Action
         $storeId = (int)$this->storeManager->getStore()->getId();
 
         try {
-            switch ($type) {
-                case 'product':
-                    $this->handleProductType($tweakwiseRequest, $value);
-                    break;
-                case 'search':
-                    $this->handleSearchType($tweakwiseRequest, $value);
-                    break;
-                case 'itemclick':
-                    $this->handleItemClickType($tweakwiseRequest, $value, $storeId);
-                    break;
-                default:
-                    return $result->setData(['success' => false, 'message' => 'Invalid type parameter.']);
-            }
-
-            $this->client->request($tweakwiseRequest);
+            $this->processAnalyticsRequest($type, $value);
             return $result->setData(['success' => true]);
         } catch (Exception $e) {
             return $result->setData(['success' => false, 'message' => $e->getMessage()]);
         }
 
         return $result;
+    }
+
+    /**
+     * Process the analytics request based on type and value.
+     *
+     * @param string $type
+     * @param string $value
+     *
+     * @throws InvalidArgumentException
+     */
+    private function processAnalyticsRequest(string $type, string $value): void
+    {
+        $profileKey = $this->config->getProfileKey();
+        $tweakwiseRequest = $this->requestFactory->create();
+        $tweakwiseRequest->setProfileKey($profileKey);
+        $storeId = (int)$this->storeManager->getStore()->getId();
+
+        switch ($type) {
+            case 'product':
+                $this->handleProductType($tweakwiseRequest, $value);
+                break;
+            case 'search':
+                $this->handleSearchType($tweakwiseRequest, $value);
+                break;
+            case 'itemclick':
+                $this->handleItemClickType($tweakwiseRequest, $value, $storeId);
+                break;
+            default:
+                throw new InvalidArgumentException('Invalid type parameter.');
+        }
+
+        $this->client->request($tweakwiseRequest);
     }
 
     /**
