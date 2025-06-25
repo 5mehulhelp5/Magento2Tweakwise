@@ -63,6 +63,11 @@ class CurrentContext
         return $this->getContext()->getResponse();
     }
 
+    /**
+     * Get the Tweakwise request ID from the response headers.
+     *
+     * @return string
+     */
     public function getTweakwiseRequestId(): string
     {
         $headers = $this->getContext()->getResponse()->getValue('headers');

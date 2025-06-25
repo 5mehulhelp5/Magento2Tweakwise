@@ -231,6 +231,9 @@ class NavigationConfig implements ArgumentInterface, FilterFormInputProviderInte
         return $this->url->getUrl('tweakwise/ajax/navigation');
     }
 
+    /**
+     * @return string
+     */
     protected function getAnalyticsEndPoint(): string
     {
         return $this->url->getUrl('tweakwise/ajax/analytics');
