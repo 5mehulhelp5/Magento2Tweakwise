@@ -269,6 +269,7 @@ class Client
         }
 
         $result = $this->xmlToArray($xmlElement);
+        $result['headers'] = $httpResponse->getHeaders();
         return $this->responseFactory->create($tweakwiseRequest, $result);
     }
 

@@ -87,6 +87,32 @@ class PersonalMerchandisingAnalytics implements ArgumentInterface
      */
     public function getSearchQuery(): string
     {
-        return $this->request->getParam('q');
+        return $this->request->getParam('q') ?? '';
+    }
+
+    /**
+     * Get the Tweakwise request ID.
+     *
+     * @return string
+     */
+    public function getTwRequestId(): string
+    {
+        return $this->request->getParam('tw_request_id') ?? '';
+    }
+
+    /**
+     * Get the value based on the analytics type.
+     *
+     * @param string $analyticsType
+     * @return string
+     */
+    public function getValue(string $analyticsType): string
+    {
+        return match ($analyticsType) {
+            'product'   => $this->getProductKey(),
+            'search'    => $this->getSearchQuery(),
+            'itemclick' => $this->getTwRequestId(),
+            default     => '',
+        };
     }
 }

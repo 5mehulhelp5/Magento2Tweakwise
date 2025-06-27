@@ -44,6 +44,11 @@
     <type name="Magento\Catalog\Block\Product\ListProduct">
         <plugin name="tweakwise-magento2tweakwise" type="Tweakwise\Magento2Tweakwise\Block\Catalog\Product\ProductList\Plugin" sortOrder="0" />
     </type>
+    <type name="Tweakwise\Magento2Tweakwise\Block\Catalog\Product\ProductList\Plugin">
+        <arguments>
+            <argument name="object" xsi:type="object">Magento\Catalog\Pricing\Price\SpecialPriceBulkResolverInterface</argument>
+        </arguments>
+    </type>
     <type name="Magento\Catalog\Block\Product\ProductList\Toolbar">
         <plugin name="tweakwise-magento2tweakwise" type="Tweakwise\Magento2Tweakwise\Block\Catalog\Product\ProductList\Toolbar\Plugin" sortOrder="-10" />
     </type>
