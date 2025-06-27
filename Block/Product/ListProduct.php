@@ -33,7 +33,7 @@ class ListProduct extends MagentoListProduct
      * @param RequestInterface $request
      * @param array $data
      * @param OutputHelper|null $outputHelper
-     * @param $specialPriceBulkResolver
+     * @param SpecialPriceBulkResolver $specialPriceBulkResolver
      * @param Layer|null $catalogLayer
      */
     public function __construct(
@@ -74,6 +74,7 @@ class ListProduct extends MagentoListProduct
                 $outputHelper
             );
         }
+
         if ($catalogLayer) {
             $this->_catalogLayer = $catalogLayer;
         }
