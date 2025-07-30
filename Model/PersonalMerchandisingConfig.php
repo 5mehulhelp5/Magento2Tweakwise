@@ -55,7 +55,7 @@ class PersonalMerchandisingConfig extends Config
     public function isAnalyticsEnabled(Store $store = null): bool
     {
         return (bool)$this->getStoreConfig(
-            'tweakwise/merchandising_builder/personal_merchandising/analytics_enabled',
+            'tweakwise/general/analytics_enabled',
             $store
         );
     }
