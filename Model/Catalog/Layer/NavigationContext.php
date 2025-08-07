@@ -276,6 +276,10 @@ class NavigationContext
      */
     public function addVisibilityFilter(ProductNavigationRequest $request)
     {
+        $visibilityAttribute = $this->config->isGroupedProductsEnabled()
+            ? 'parent_' . self::VISIBILITY_ATTRIBUTE
+            : self::VISIBILITY_ATTRIBUTE;
+
         if ($request instanceof ProductSearchRequest) {
             $visibilityValues = $this->visibility->getVisibleInSearchIds();
         } else {
@@ -283,7 +287,7 @@ class NavigationContext
         }
 
         foreach ($visibilityValues as $visibilityValue) {
-            $request->addHiddenParameter(self::VISIBILITY_ATTRIBUTE, $visibilityValue);
+            $request->addHiddenParameter($visibilityAttribute, $visibilityValue);
         }
     }
 }
