@@ -6,16 +6,26 @@ use Magento\Framework\Escaper;
 $viewModel = $block->getData('viewModel');
 $analyticsType = $block->getData('analyticsType');
 $value = $viewModel->getValue($analyticsType);
+
+/** @var \Tweakwise\Magento2Tweakwise\Model\NavigationConfig $tweakwiseNavigationConfig */
+$tweakwiseNavigationConfig = $block->getData('tweakwise_navigation_config');
+$jsFormConfig = $tweakwiseNavigationConfig ? $tweakwiseNavigationConfig->getJsFormConfig() : [];
 ?>
 
 <script type="text/x-magento-init">
     {
         "*": {
             "Tweakwise_Magento2Tweakwise/js/analytics": {
-              "value": "<?= $escaper->escapeHtmlAttr($value); ?>",
-              "type": "<?= $escaper->escapeHtmlAttr($analyticsType); ?>"
+                "value": "<?= $escaper->escapeHtmlAttr($value ?? ''); ?>",
+                "type": "<?= $escaper->escapeHtmlAttr($analyticsType ?? ''); ?>",
+                "bindItemClickEventsConfig": {
+                    "productListSelector": "<?= $escaper->escapeHtmlAttr($jsFormConfig['tweakwiseNavigationForm']['productListSelector'] ?? ''); ?>",
+                    "productSelector": "<?= $escaper->escapeHtmlAttr($jsFormConfig['tweakwiseNavigationForm']['productSelector'] ?? ''); ?>",
+                    "analyticsEndpoint": "<?= $escaper->escapeHtmlAttr($jsFormConfig['tweakwiseNavigationForm']['analyticsEndpoint'] ?? ''); ?>",
+                    "twRequestId": "<?= $escaper->escapeHtmlAttr($jsFormConfig['tweakwiseNavigationForm']['twRequestId'] ?? ''); ?>"
+                }
+            }
         }
     }
-}
 </script>
 <script src="<?= $escaper->escapeHtmlAttr($block->getViewFileUrl('Tweakwise_Magento2Tweakwise::js/analytics.js')); ?>"></script>
