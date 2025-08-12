@@ -71,8 +71,8 @@ class UrlModel extends MagentoUrl
         Config $config,
         array $tweakwiseSystemParams = [],
         array $data = [],
-        HostChecker $hostChecker = null,
-        Json $serializer = null
+        ?HostChecker $hostChecker = null,
+        ?Json $serializer = null
     ) {
         parent::__construct(
             $routeConfig,
