@@ -277,7 +277,7 @@ class NavigationContext
     public function addVisibilityFilter(ProductNavigationRequest $request)
     {
         $visibilityAttribute = $this->config->isGroupedProductsEnabled()
-            ? 'parent_' . self::VISIBILITY_ATTRIBUTE
+            ? sprintf('parent_%s', self::VISIBILITY_ATTRIBUTE)
             : self::VISIBILITY_ATTRIBUTE;
 
         if ($request instanceof ProductSearchRequest) {
