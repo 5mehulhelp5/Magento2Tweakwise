@@ -11,6 +11,7 @@ namespace Tweakwise\Magento2Tweakwise\Model\Client\Request\Recommendations;
 
 use Tweakwise\Magento2Tweakwise\Exception\ApiException;
 use Magento\Catalog\Model\Product;
+use Magento\Catalog\Model\Product\Type;
 
 class ProductRequest extends FeaturedRequest
 {
@@ -77,7 +78,7 @@ class ProductRequest extends FeaturedRequest
     {
         $children = $product->getTypeInstance()->getUsedProducts($product);
         foreach ($children as $child) {
-            if ($child->isSaleable() && $child->getTypeId() === Magento\Catalog\Model\Product\Type::TYPE_SIMPLE) {
+            if ($child->isSaleable() && $child->getTypeId() === Type::TYPE_SIMPLE) {
                 return $child;
             }
         }
