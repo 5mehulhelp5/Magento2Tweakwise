@@ -11,6 +11,8 @@ namespace Tweakwise\Magento2Tweakwise\Model\Client\Request\Recommendations;
 
 use Tweakwise\Magento2Tweakwise\Exception\ApiException;
 use Magento\Catalog\Model\Product;
+use Magento\Catalog\Model\Product\Type;
+use Magento\ConfigurableProduct\Model\Product\Type\Configurable;
 
 class ProductRequest extends FeaturedRequest
 {
@@ -34,6 +36,11 @@ class ProductRequest extends FeaturedRequest
     public function setProduct(Product $product)
     {
         $this->product = $product;
+
+        if ($this->config->isGroupedProductsEnabled() && $product->getTypeId() === Configurable::TYPE_CODE) {
+            $this->product = $this->getSimpleProduct($product);
+        }
+
         return $this;
     }
 
@@ -62,5 +69,19 @@ class ProductRequest extends FeaturedRequest
         }
 
         return '/' . $productTweakwiseId . parent::getPathSuffix();
+    }
+
+    /**
+     * @param Product $product
+     * @return Product
+     */
+    private function getSimpleProduct(Product $product): Product
+    {
+        $children = $product->getTypeInstance()->getUsedProducts($product);
+        foreach ($children as $child) {
+            if ($child->isSaleable() && $child->getTypeId() === Type::TYPE_SIMPLE) {
+                return $child;
+            }
+        }
     }
 }

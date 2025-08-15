@@ -593,6 +593,9 @@ class PathSlugStrategy implements
             $url .= '/' . trim($filterSlugPath, '/');
         }
 
+        //remove double slashes with exception for the protocol
+        $url = preg_replace('#(?<!:)//+#', '/', $url);
+
         /*
          We explode the url so that we can capture its parts and find the double values in order to remove them.
          This is needed because the categoryUrlPath contains the store code in some cases and the directUrl as well.
@@ -613,9 +616,6 @@ class PathSlugStrategy implements
         }
 
         $url = implode('/', $filteredParts);
-
-        //remove double slashes with exception for the protocol
-        $url = preg_replace('#(?<!:)//+#', '/', $url);
 
         return $url;
     }

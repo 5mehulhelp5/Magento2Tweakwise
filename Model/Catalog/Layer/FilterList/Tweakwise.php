@@ -176,6 +176,10 @@ class Tweakwise
             return false;
         }
 
+        if (count($filter->getActiveItems()) > 0) {
+            return false;
+        }
+
         return count($filter->getItems()) === 1;
     }
 
