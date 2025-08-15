@@ -70,7 +70,8 @@ class Config
      */
     public const FALLBACK_SERVER_URL = 'https://gateway.tweakwisenavigator.com';
 
-    private const PRODUCT_CARD_LIFETIME_XML_PATH = 'tweakwise/personal_merchandising/product_card_lifetime';
+    private const PRODUCT_CARD_LIFETIME_XML_PATH =
+        'tweakwise/merchandising_builder/personal_merchandising/product_card_lifetime';
 
     /**
      * @var ScopeConfigInterface
@@ -399,8 +400,16 @@ class Config
      */
     public function isPersonalMerchandisingActive(Store $store = null)
     {
-        return (bool) $this->getStoreConfig('tweakwise/personal_merchandising/enabled', $store)
-            && $this->isAjaxFilters($store);
+        return (bool) $this->getStoreConfig('tweakwise/merchandising_builder/personal_merchandising/enabled', $store);
+    }
+
+    /**
+     * @param Store|null $store
+     * @return bool
+     */
+    public function isVisualsEnabled(Store $store = null)
+    {
+        return (bool)$this->getStoreConfig('tweakwise/merchandising_builder/visuals/enabled', $store);
     }
 
     /**
@@ -419,7 +428,7 @@ class Config
      */
     public function getPersonalMerchandisingCookieName(Store $store = null)
     {
-        $cookie = $this->getStoreConfig('tweakwise/personal_merchandising/cookie_name', $store);
+        $cookie = $this->getStoreConfig('tweakwise/merchandising_builder/personal_merchandising/cookie_name', $store);
 
         if (empty($cookie)) {
             $cookie = 'tw_analytics';

@@ -114,6 +114,14 @@ class Cache
     }
 
     /**
+     * @return bool
+     */
+    public function shouldUseMerchandisingListing(): bool
+    {
+        return $this->personalMerchandisingCanBeApplied() || $this->config->isVisualsEnabled();
+    }
+
+    /**
      * @param RequestInterface $request
      * @return bool
      */

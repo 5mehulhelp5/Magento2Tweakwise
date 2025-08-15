@@ -33,6 +33,7 @@ class ListProduct extends MagentoListProduct
      * @param RequestInterface $request
      * @param array $data
      * @param OutputHelper|null $outputHelper
+     * @param SpecialPriceBulkResolver $specialPriceBulkResolver
      * @param Layer|null $catalogLayer
      */
     public function __construct(
@@ -48,17 +49,32 @@ class ListProduct extends MagentoListProduct
         private readonly RequestInterface $request,
         array $data = [],
         ?OutputHelper $outputHelper = null,
+        $specialPriceBulkResolver = null,
         ?Layer $catalogLayer = null
     ) {
-        parent::__construct(
-            $context,
-            $postDataHelper,
-            $layerResolver,
-            $categoryRepository,
-            $urlHelper,
-            $data,
-            $outputHelper
-        );
+        if (!$specialPriceBulkResolver) {
+            parent::__construct(
+                $context,
+                $postDataHelper,
+                $layerResolver,
+                $categoryRepository,
+                $urlHelper,
+                $data,
+                $outputHelper
+            );
+        } else {
+            parent::__construct(
+                $context,
+                $postDataHelper,
+                $layerResolver,
+                $categoryRepository,
+                $urlHelper,
+                $data,
+                $specialPriceBulkResolver,
+                $outputHelper
+            );
+        }
+
         if ($catalogLayer) {
             $this->_catalogLayer = $catalogLayer;
         }
@@ -117,7 +133,10 @@ class ListProduct extends MagentoListProduct
      */
     public function getTemplate()
     {
-        if ($this->cacheHelper->isHyvaTheme()) {
+        if (
+            !$this->cacheHelper->shouldUseMerchandisingListing() ||
+            $this->cacheHelper->isHyvaTheme()
+        ) {
             return parent::getTemplate();
         }
 
