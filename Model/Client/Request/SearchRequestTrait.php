@@ -19,7 +19,7 @@ trait SearchRequestTrait
      * @param string|null $value
      * @return mixed
      */
-    abstract public function setParameter(string $parameter, string $value = null);
+    abstract public function setParameter(string $parameter, ?string $value = null);
 
     /**
      * @param string $parameter

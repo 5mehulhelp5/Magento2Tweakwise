@@ -172,7 +172,7 @@ class Config
      * @param Store|null $store
      * @return string
      */
-    public function getGeneralAuthenticationKey(Store $store = null)
+    public function getGeneralAuthenticationKey(?Store $store = null)
     {
         return (string)$this->getStoreConfig('tweakwise/general/authentication_key', $store);
     }
@@ -191,7 +191,7 @@ class Config
      * @param Store|null $store
      * @return bool
      */
-    public function isLayeredEnabled(Store $store = null)
+    public function isLayeredEnabled(?Store $store = null)
     {
         if ($this->tweakwiseExceptionThrown) {
             return false;
@@ -204,7 +204,7 @@ class Config
      * @param Store|null $store
      * @return bool
      */
-    public function isAjaxFilters(Store $store = null)
+    public function isAjaxFilters(?Store $store = null)
     {
         return (bool)$this->getStoreConfig('tweakwise/layered/ajax_filters', $store);
     }
@@ -214,7 +214,7 @@ class Config
      * @return bool
      * @SuppressWarnings(PHPMD.BooleanGetMethodName)
      */
-    public function getCategoryAsLink(Store $store = null)
+    public function getCategoryAsLink(?Store $store = null)
     {
         return (bool)$this->getStoreConfig('tweakwise/layered/category_links', $store);
     }
@@ -224,7 +224,7 @@ class Config
      * @return bool
      * @SuppressWarnings(PHPMD.BooleanGetMethodName)
      */
-    public function getHideSingleOptions(Store $store = null)
+    public function getHideSingleOptions(?Store $store = null)
     {
         return (bool)$this->getStoreConfig('tweakwise/layered/hide_single_option', $store);
     }
@@ -234,7 +234,7 @@ class Config
      * @return bool
      * @SuppressWarnings(PHPMD.BooleanGetMethodName)
      */
-    public function getUseDefaultLinkRenderer(Store $store = null)
+    public function getUseDefaultLinkRenderer(?Store $store = null)
     {
         return (bool) $this->getStoreConfig('tweakwise/layered/default_link_renderer', $store);
     }
@@ -243,7 +243,7 @@ class Config
      * @param Store|null $store
      * @return bool
      */
-    public function isFormFilters(Store $store = null)
+    public function isFormFilters(?Store $store = null)
     {
         return (bool)$this->getStoreConfig('tweakwise/layered/form_filters', $store);
     }
@@ -252,7 +252,7 @@ class Config
      * @param Store|null $store
      * @return string
      */
-    public function getQueryFilterType(Store $store = null)
+    public function getQueryFilterType(?Store $store = null)
     {
         return (string)$this->getStoreConfig('tweakwise/layered/query_filter_type', $store);
     }
@@ -261,7 +261,7 @@ class Config
      * @param Store|null $store
      * @return array
      */
-    public function getQueryFilterArguments(Store $store = null)
+    public function getQueryFilterArguments(?Store $store = null)
     {
         if ($this->parsedFilterArguments === null) {
             $arguments = $this->getStoreConfig('tweakwise/layered/query_filter_arguments', $store);
@@ -278,7 +278,7 @@ class Config
      * @param Store|null $store
      * @return string
      */
-    public function getQueryFilterRegex(Store $store = null)
+    public function getQueryFilterRegex(?Store $store = null)
     {
         return (string)$this->getStoreConfig('tweakwise/layered/query_filter_regex', $store);
     }
@@ -287,7 +287,7 @@ class Config
      * @param Store|null $store
      * @return string
      */
-    public function getUrlStrategy(Store $store = null): string
+    public function getUrlStrategy(?Store $store = null): string
     {
         $urlStrategy = $this->getStoreConfig('tweakwise/layered/url_strategy', $store);
         if (empty($urlStrategy)) {
@@ -301,7 +301,7 @@ class Config
      * @param Store|null $store
      * @return bool
      */
-    public function isAutocompleteEnabled(Store $store = null)
+    public function isAutocompleteEnabled(?Store $store = null)
     {
         if ($this->tweakwiseExceptionThrown) {
             return false;
@@ -314,7 +314,7 @@ class Config
      * @param Store|null $store
      * @return bool
      */
-    public function isSuggestionsAutocomplete(Store $store = null)
+    public function isSuggestionsAutocomplete(?Store $store = null)
     {
         return (bool) $this->getStoreConfig('tweakwise/autocomplete/use_suggestions', $store);
     }
@@ -323,7 +323,7 @@ class Config
      * @param Store|null $store
      * @return bool
      */
-    public function isAutocompleteProductsEnabled(Store $store = null)
+    public function isAutocompleteProductsEnabled(?Store $store = null)
     {
         return (bool)($this->getStoreConfig('tweakwise/autocomplete/show_products', $store) &&
             !$this->isSuggestionsAutocomplete());
@@ -333,7 +333,7 @@ class Config
      * @param Store|null $store
      * @return bool
      */
-    public function isAutocompleteSuggestionsEnabled(Store $store = null)
+    public function isAutocompleteSuggestionsEnabled(?Store $store = null)
     {
         return (bool)($this->getStoreConfig('tweakwise/autocomplete/show_suggestions', $store) &&
             !$this->isSuggestionsAutocomplete());
@@ -352,7 +352,7 @@ class Config
      * @param Store|null $store
      * @return int
      */
-    public function getAutocompleteMaxResults(Store $store = null)
+    public function getAutocompleteMaxResults(?Store $store = null)
     {
         return (int)$this->getStoreConfig('tweakwise/autocomplete/max_results', $store);
     }
@@ -361,7 +361,7 @@ class Config
      * @param Store|null $store
      * @return bool
      */
-    public function isAutocompleteStayInCategory(Store $store = null)
+    public function isAutocompleteStayInCategory(?Store $store = null)
     {
         return (bool)$this->getStoreConfig('tweakwise/autocomplete/in_current_category', $store);
     }
@@ -370,7 +370,7 @@ class Config
      * @param Store|null $store
      * @return int
      */
-    public function isSearchEnabled(Store $store = null)
+    public function isSearchEnabled(?Store $store = null)
     {
         return (int)$this->getStoreConfig('tweakwise/search/enabled', $store);
     }
@@ -379,7 +379,7 @@ class Config
      * @param Store|null $store
      * @return int
      */
-    public function getSearchTemplateId(Store $store = null)
+    public function getSearchTemplateId(?Store $store = null)
     {
         return (int)$this->getStoreConfig('tweakwise/search/template', $store);
     }
@@ -388,7 +388,7 @@ class Config
      * @param Store|null $store
      * @return bool
      */
-    public function isPersonalMerchandisingActive(Store $store = null)
+    public function isPersonalMerchandisingActive(?Store $store = null)
     {
         return (bool) $this->getStoreConfig('tweakwise/merchandising_builder/personal_merchandising/enabled', $store);
     }
@@ -397,7 +397,7 @@ class Config
      * @param Store|null $store
      * @return bool
      */
-    public function isVisualsEnabled(Store $store = null)
+    public function isVisualsEnabled(?Store $store = null)
     {
         return (bool)$this->getStoreConfig('tweakwise/merchandising_builder/visuals/enabled', $store);
     }
@@ -406,7 +406,7 @@ class Config
      * @param Store|null $store
      * @return bool
      */
-    public function isSearchBannersActive(Store $store = null)
+    public function isSearchBannersActive(?Store $store = null)
     {
         return (bool) $this->getStoreConfig('tweakwise/search/searchbanner', $store)
             && $this->isSearchEnabled();
@@ -416,7 +416,7 @@ class Config
      * @param Store|null $store
      * @return string
      */
-    public function getPersonalMerchandisingCookieName(Store $store = null)
+    public function getPersonalMerchandisingCookieName(?Store $store = null)
     {
         $cookie = $this->getStoreConfig('tweakwise/merchandising_builder/personal_merchandising/cookie_name', $store);
 
@@ -432,7 +432,7 @@ class Config
      * @param Store|null $store
      * @return bool
      */
-    public function isRecommendationsEnabled($type, Store $store = null)
+    public function isRecommendationsEnabled($type, ?Store $store = null)
     {
         $this->validateRecommendationType($type);
         return (bool)$this->getStoreConfig(sprintf('tweakwise/recommendations/%s_enabled', $type), $store);
@@ -452,7 +452,7 @@ class Config
      * @param Store|null $store
      * @return int
      */
-    public function getRecommendationsTemplate($type, Store $store = null)
+    public function getRecommendationsTemplate($type, ?Store $store = null)
     {
         $this->validateRecommendationType($type);
         return (int)$this->getStoreConfig(sprintf('tweakwise/recommendations/%s_template', $type), $store);
@@ -463,7 +463,7 @@ class Config
      * @param Store|null $store
      * @return int
      */
-    public function getRecommendationsGroupCode($type, Store $store = null)
+    public function getRecommendationsGroupCode($type, ?Store $store = null)
     {
         $this->validateRecommendationType($type);
         return $this->getStoreConfig(sprintf('tweakwise/recommendations/%s_group_code', $type), $store);
@@ -473,7 +473,7 @@ class Config
      * @param Store|null $store
      * @return string
      */
-    public function getRecommendationsFeaturedLocation(Store $store = null)
+    public function getRecommendationsFeaturedLocation(?Store $store = null)
     {
         return (string)$this->getStoreConfig('tweakwise/recommendations/featured_location', $store);
     }
@@ -482,7 +482,7 @@ class Config
      * @param Store|null $store
      * @return string
      */
-    public function getRecommendationsFeaturedCategory(Store $store = null)
+    public function getRecommendationsFeaturedCategory(?Store $store = null)
     {
         return (string)$this->getStoreConfig('tweakwise/recommendations/featured_category', $store);
     }
@@ -491,7 +491,7 @@ class Config
      * @param Store|null $store
      * @return bool
      */
-    public function isSeoEnabled(Store $store = null)
+    public function isSeoEnabled(?Store $store = null)
     {
         return (bool)$this->getStoreConfig('tweakwise/seo/enabled', $store);
     }
@@ -500,7 +500,7 @@ class Config
      * @param Store|null $store
      * @return array
      */
-    public function getFilterWhitelist(Store $store = null)
+    public function getFilterWhitelist(?Store $store = null)
     {
         return ConfigAttributeProcessService::extractFilterWhitelist(
             $this->getStoreConfig('tweakwise/seo/filter_whitelist', $store)
@@ -511,7 +511,7 @@ class Config
      * @param Store|null $store
      * @return array
      */
-    public function getFilterValuesWhitelist(Store $store = null): array
+    public function getFilterValuesWhitelist(?Store $store = null): array
     {
         return ConfigAttributeProcessService::extractFilterValuesWhitelist(
             $this->getStoreConfig('tweakwise/seo/filter_values_whitelist', $store)
@@ -522,7 +522,7 @@ class Config
      * @param Store|null $store
      * @return int
      */
-    public function getLimitGroupCodeItems(Store $store = null): int
+    public function getLimitGroupCodeItems(?Store $store = null): int
     {
         return (int) $this->getStoreConfig('tweakwise/recommendations/limit_group_code_items', $store);
     }
@@ -531,7 +531,7 @@ class Config
      * @param Store|null $store
      * @return int
      */
-    public function getMaxAllowedFacets(Store $store = null)
+    public function getMaxAllowedFacets(?Store $store = null)
     {
         return $this->getStoreConfig('tweakwise/seo/max_allowed_facets', $store);
     }
@@ -540,7 +540,7 @@ class Config
      * @param Store|null $store
      * @return mixed|string|null
      */
-    public function getSearchLanguage(Store $store = null)
+    public function getSearchLanguage(?Store $store = null)
     {
         return $this->getStoreConfig('tweakwise/search/language', $store);
     }
@@ -551,7 +551,7 @@ class Config
      * @return mixed|string|null
      * @throws LocalizedException
      */
-    protected function getStoreConfig(string $path, Store $store = null)
+    protected function getStoreConfig(string $path, ?Store $store = null)
     {
         if ($store) {
             return $store->getConfig($path);
@@ -642,7 +642,7 @@ class Config
      * @param Store|null $store
      * @return int
      */
-    public function isCategoryViewDefault(Store $store = null)
+    public function isCategoryViewDefault(?Store $store = null)
     {
         return $this->getStoreConfig('tweakwise/layered/default_category_view', $store);
     }

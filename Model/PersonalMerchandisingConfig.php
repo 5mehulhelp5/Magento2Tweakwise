@@ -52,7 +52,7 @@ class PersonalMerchandisingConfig extends Config
      * @return bool
      * @throws LocalizedException
      */
-    public function isAnalyticsEnabled(Store $store = null): bool
+    public function isAnalyticsEnabled(?Store $store = null): bool
     {
         return (bool)$this->getStoreConfig(
             'tweakwise/merchandising_builder/personal_merchandising/analytics_enabled',
