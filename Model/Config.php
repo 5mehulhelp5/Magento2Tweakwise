@@ -182,7 +182,7 @@ class Config
      * @return bool
      * @throws LocalizedException
      */
-    public function isGroupedProductsEnabled(Store $store = null): bool
+    public function isGroupedProductsEnabled(?Store $store = null): bool
     {
         return (bool)$this->getStoreConfig('tweakwise/general/grouped_products', $store);
     }
