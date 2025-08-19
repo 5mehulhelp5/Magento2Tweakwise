@@ -20,8 +20,7 @@ Below is a rundown of all configuration options
 
 #### General:
 1) Authentication key: This is used to communicate with tweakwise and determines your navigator instance, it should be the same as the key found in the navigator under `Connectivity > End points`.
-2) Server url: The url of the tweakwise server.
-3) Timeout: If tweakwise fails to respond after this time in seconds the request is aborted.
+2) Grouped producets: Enable this after the grouped export has been enabled and imported in tweakwise. This wil enable filtering based on variant data and enabled the product image to be controlled by tweakwise so that the correct color is shown based on selected filters. This requires the image url in tweakwise to be configured correctly. If this is not enabled and you've exported grouped products the catalog may be empty.
 
 #### Layered Navigation (All settings depend on Enabled having value yes):
 1) Enabled: Use tweakwise results in navigation, if disabled the standard magento navigation is used. Don't disable the anchor tag on main categories, this causes al products to be shown. The anchor tag can be disabled on sub-categories.
