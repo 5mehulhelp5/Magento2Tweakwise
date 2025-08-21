@@ -34,7 +34,7 @@ class RecommendationsResponse extends Response
         Helper $helper,
         Request $request,
         private readonly Config $config,
-        array $data = null
+        ?array $data = null
     ) {
         parent::__construct(
             $helper,

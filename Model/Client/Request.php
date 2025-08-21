@@ -147,7 +147,7 @@ class Request
      * @param string|null $value
      * @return $this
      */
-    public function setParameter(string $parameter, string $value = null)
+    public function setParameter(string $parameter, ?string $value = null)
     {
         if ($value === null) {
             unset($this->parameters[$parameter]);
