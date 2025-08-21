@@ -213,7 +213,7 @@ class NavigationContext
      * @param array $attributeCodes
      * @return Attribute[]
      */
-    public function getFilterAttributeMap(array $attributeCodes = null): array
+    public function getFilterAttributeMap(?array $attributeCodes = null): array
     {
         if ($this->filterAttributeMap === null) {
             $map = [];

@@ -26,7 +26,7 @@ class SuggestionsResponse extends Response
         SuggestionTypeGroupFactory $suggestionTypeGroupFactory,
         Helper $helper,
         Request $request,
-        array $data = null
+        ?array $data = null
     ) {
         $this->suggestionTypeGroupFactory = $suggestionTypeGroupFactory;
         parent::__construct($helper, $request, $data);

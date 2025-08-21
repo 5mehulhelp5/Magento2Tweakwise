@@ -32,7 +32,7 @@ class Response extends Type
      * @param Request $request
      * @param array $data
      */
-    public function __construct(Helper $helper, Request $request, array $data = null)
+    public function __construct(Helper $helper, Request $request, ?array $data = null)
     {
         $this->request = $request;
         $this->helper = $helper;

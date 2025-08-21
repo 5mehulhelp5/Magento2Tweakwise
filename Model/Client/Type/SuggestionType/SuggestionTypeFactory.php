@@ -25,7 +25,7 @@ class SuggestionTypeFactory
      * @param string|null $type
      * @return SuggestionTypeAbstract
      */
-    public function createSuggestion(array $suggestion, string $type = null): SuggestionTypeAbstract
+    public function createSuggestion(array $suggestion, ?string $type = null): SuggestionTypeAbstract
     {
         $type = $this->resolveClass($type);
         /** @var SuggestionTypeAbstract $suggestionType */

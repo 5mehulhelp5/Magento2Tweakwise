@@ -63,7 +63,7 @@ class Collection extends AbstractCollection
         DateTime $dateTime,
         GroupManagementInterface $groupManagement,
         RecommendationsResponse $response,
-        AdapterInterface $connection = null
+        ?AdapterInterface $connection = null
     ) {
         parent::__construct(
             $entityFactory,

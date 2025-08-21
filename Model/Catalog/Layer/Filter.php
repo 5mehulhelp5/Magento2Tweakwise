@@ -108,7 +108,7 @@ class Filter extends AbstractFilter implements FilterInterface
         FacetType $facet,
         ItemFactory $itemFactory,
         StoreManager $storeManager,
-        Attribute $attribute = null
+        ?Attribute $attribute = null
     ) {
         $this->layer = $layer;
         $this->facet = $facet;

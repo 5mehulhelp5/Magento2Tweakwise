@@ -94,7 +94,7 @@ class Collection extends AbstractCollection
         NavigationContext $navigationContext,
         private readonly VisualFactory $visualFactory,
         private readonly Config $config,
-        AdapterInterface $connection = null
+        ?AdapterInterface $connection = null
     ) {
         parent::__construct(
             $entityFactory,
