@@ -18,6 +18,14 @@
                     <comment>Provided by Tweakwise (8 alphanumeric characters)</comment>
                     <validate>required-entry validate-alphanum</validate>
                 </field>
+                <field id="analytics_enabled" translate="label" type="select" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Send analytics events to Tweakwise</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    <comment>Note only enable this if you don't use javascript to send productviews/search/purchases requests to tweakwise</comment>
+                </field>
+                <field id="cookie_name" translate="label,comment" type="text" sortOrder="60" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Cookie name </label>
+                    <comment>Name of cookie which holds tweakwise profile information, this is usually set in the tweakwise measure script. Or when analytics is enabled, it is done automaticly and you can leave this empty</comment>
                 <field id="grouped_products" translate="label comment" type="select" sortOrder="30" showInDefault="1"
                        showInWebsite="1" showInStore="1">
                     <label>Grouped Products</label>
@@ -240,13 +248,6 @@
                             setting below)
                         </comment>
                     </field>
-                    <field id="cookie_name" translate="label,comment" type="text" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
-                        <label>Cookie name</label>
-                        <comment>Name of cookie which holds tweakwise profile information, this is usually set in the tweakwise measure script. Or when analytics is enabled, it is done automaticly</comment>
-                        <depends>
-                            <field id="enabled">1</field>
-                        </depends>
-                    </field>
                     <field id="product_card_lifetime" translate="label,comment" type="text" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1">
                         <label>Product Card TTL</label>
                         <comment>The cache lifetime for a product tile on the category view.</comment>
@@ -254,11 +255,6 @@
                         <depends>
                             <field id="enabled">1</field>
                         </depends>
-                    </field>
-                    <field id="analytics_enabled" translate="label" type="select" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="1">
-                        <label>Send analytics events to Tweakwise</label>
-                        <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
-                        <comment>Note only enable this if you don't use javascript to send productviews/search/purchases requests to tweakwise</comment>
                     </field>
                 </group>
                 <group id="visuals" translate="label" type="text" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
