@@ -26,6 +26,7 @@
                 <field id="cookie_name" translate="label,comment" type="text" sortOrder="60" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Cookie name </label>
                     <comment>Name of cookie which holds tweakwise profile information, this is usually set in the tweakwise measure script. Or when analytics is enabled, it is done automaticly and you can leave this empty</comment>
+                </field>
                 <field id="grouped_products" translate="label comment" type="select" sortOrder="30" showInDefault="1"
                        showInWebsite="1" showInStore="1">
                     <label>Grouped Products</label>
