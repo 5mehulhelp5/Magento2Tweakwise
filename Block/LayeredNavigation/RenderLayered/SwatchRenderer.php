@@ -109,6 +109,15 @@ class SwatchRenderer extends RenderLayered
     }
 
     /**
+     * @param Item $item
+     * @return bool
+     */
+    public function itemDefaultHidden(Item $item)
+    {
+        return (bool) $item->getData('_default_hidden');
+    }
+
+    /**
      * @return array
      * @throws RuntimeException
      * phpcs:disable Generic.Metrics.CyclomaticComplexity.TooHigh
@@ -146,6 +155,7 @@ class SwatchRenderer extends RenderLayered
                 $this->filter->setAttributeModel($attribute);
                 $optionIds = array_values($swatchAttributeData['options']);
                 $optionLabels = array_keys($swatchAttributeData['options']);
+                $maxItems = $this->getMaxItemsShown();
 
                 $filterItems = [];
                 foreach ($this->filter->getItems() as $item) {
@@ -155,6 +165,8 @@ class SwatchRenderer extends RenderLayered
 
                     $filterItems[$item->getLabel()] = $item;
                 }
+
+                $counter = 0;
 
                 $attributeOptions = [];
                 foreach ($attribute->getOptions() as $option) {
@@ -167,7 +179,11 @@ class SwatchRenderer extends RenderLayered
                         continue;
                     }
 
+                    $defaultShow = $counter >= $maxItems;
+                    $filterItem->setData('_default_hidden', $defaultShow);
+
                     $attributeOptions[$option->getValue()] = $this->getOptionViewData($filterItem, $option);
+                    $counter++;
                 }
 
                 $swatchData = [
@@ -203,6 +219,16 @@ class SwatchRenderer extends RenderLayered
     public function getItemForSwatch($id)
     {
         return $this->filter->getItemByOptionId($id);
+    }
+
+    public function getMaxItemsShown(): int
+    {
+        return $this->getFacetSettings()->getNumberOfShownAttributes();
+    }
+
+    public function hasHiddenItems()
+    {
+        return count($this->getSwatchData()['options']) > $this->getMaxItemsShown();
     }
 
     /**
@@ -243,5 +269,28 @@ class SwatchRenderer extends RenderLayered
     public function getSearchNoResultsText()
     {
         return $this->filter->getFacet()->getFacetSettings()->getSearchNoResultsText();
+    }
+
+    public function getMoreItemText()
+    {
+        $text = $this->getFacetSettings()->getExpandText();
+        if ($text) {
+            return $text;
+        }
+
+        return 'Meer filters tonen';
+    }
+
+    /**
+     * @return string
+     */
+    public function getLessItemText()
+    {
+        $text = $this->getFacetSettings()->getCollapseText();
+        if ($text) {
+            return $text;
+        }
+
+        return 'Minder filters tonen';
     }
 }

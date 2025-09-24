@@ -11,6 +11,8 @@
 
 use Magento\Framework\Escaper;
 
+$hasHiddenItems = $block->hasHiddenItems();
+
 ?>
 <?php $swatchData = $block->getSwatchData(); ?>
 <div class="swatch-attribute swatch-layered <?=  $swatchData['attribute_code'] ?>"
@@ -27,7 +29,7 @@ use Magento\Framework\Escaper;
             <?php if (!$item) continue; ?>
             <a <?=$block->renderAnchorHtmlTagAttributes($item);?>
                 aria-label="<?=  $label['label'] ?>"
-                class="swatch-option-link-layered"
+                class="swatch-option-link-layered <?php if ($block->shouldDisplayProductCountOnLayer()): ?>swatch-with-count<?php endif; ?><?=$block->itemDefaultHidden($item) ? ' default-hidden' : ''?>"
             >
                 <?php $cssId = $item->getCssId();?>
                 <input id="<?=$cssId?>" style="display: none"
@@ -105,6 +107,11 @@ use Magento\Framework\Escaper;
             </a>
         <?php endforeach; ?>
     </div>
+
+    <?php if ($hasHiddenItems): ?>
+        <a class="more-items"><?=$escaper->escapeHtml(__($block->getMoreItemText()))?></a>
+        <a class="less-items default-hidden"><?=$escaper->escapeHtml(__($block->getLessItemText()))?></a>
+    <?php endif; ?>
 </div>
 
 <script>
