@@ -158,7 +158,7 @@
                 <field id="use_suggestions" translate="label" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Use Suggestions Autocomplete</label>
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
-                    <comment>Use default autocomplete (No) or use the new suggestion api (Yes) </comment>
+                    <comment>Use default suggestions (Yes) or use the old autocomplete api (No) </comment>
                     <depends>
                         <field id="enabled">1</field>
                     </depends>
