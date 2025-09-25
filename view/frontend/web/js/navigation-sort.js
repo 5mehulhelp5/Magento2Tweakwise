@@ -91,7 +91,7 @@ define([
                 items = filterInput.parent('div');
                 filterElement = 'a';
 
-                if (empty(defaultVisibleItems)) {
+                if (!defaultVisibleItems) {
                     defaultVisibleItems = 100;
                 }
             }

@@ -112,7 +112,7 @@ class SwatchRenderer extends RenderLayered
      * @param Item $item
      * @return bool
      */
-    public function itemDefaultHidden(Item $item)
+    public function itemDefaultHidden(Item $item): bool
     {
         return (bool) $item->getData('_default_hidden');
     }
@@ -214,12 +214,18 @@ class SwatchRenderer extends RenderLayered
         return $this->filter->getItemByOptionId($id);
     }
 
+    /**
+     * @return int
+     */
     public function getMaxItemsShown(): int
     {
         return $this->getFacetSettings()->getNumberOfShownAttributes();
     }
 
-    public function hasHiddenItems()
+    /**
+     * @return bool
+     */
+    public function hasHiddenItems(): bool
     {
         return count($this->getSwatchData()['options']) > $this->getMaxItemsShown();
     }
@@ -264,7 +270,10 @@ class SwatchRenderer extends RenderLayered
         return $this->filter->getFacet()->getFacetSettings()->getSearchNoResultsText();
     }
 
-    public function getMoreItemText()
+    /**
+     * @return string
+     */
+    public function getMoreItemText(): string
     {
         $text = $this->getFacetSettings()->getExpandText();
         if ($text) {
@@ -277,7 +286,7 @@ class SwatchRenderer extends RenderLayered
     /**
      * @return string
      */
-    public function getLessItemText()
+    public function getLessItemText(): string
     {
         $text = $this->getFacetSettings()->getCollapseText();
         if ($text) {

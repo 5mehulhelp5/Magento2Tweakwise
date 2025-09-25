@@ -15,12 +15,12 @@ $hasHiddenItems = $block->hasHiddenItems();
 
 ?>
 <?php $swatchData = $block->getSwatchData(); ?>
-<div class="swatch-attribute swatch-layered <?=  $escaper->escapeHtmlAttr($swatchData['attribute_code']) ?>"
-     attribute-code="<?=  $escaper->escapeHtmlAttr($swatchData['attribute_code']) ?>"
-     attribute-id="<?=  $escaper->escapeHtmlAttr($swatchData['attribute_id']) ?>"
+<div class="swatch-attribute swatch-layered <?= $escaper->escapeHtmlAttr($swatchData['attribute_code']) ?>"
+     attribute-code="<?= $escaper->escapeHtmlAttr($swatchData['attribute_code']) ?>"
+     attribute-id="<?= $escaper->escapeHtmlAttr($swatchData['attribute_id']) ?>"
      data-mage-init='{"tweakwiseNavigationSort":[]}'>
     <?php if ($block->isSearchable()): ?>
-        <input data-max-visible="<?=  $escaper->escapeHtmlAttr($block->getMaxItemsShown())?>" type="text" class="tw_filtersearch js-skip-submit" name="tw_filtersearch" placeholder="<?= $escaper->escapeHtmlAttr($block->getSearchPlaceholder()); ?>" >
+        <input data-max-visible="<?= $escaper->escapeHtmlAttr($block->getMaxItemsShown())?>" type="text" class="tw_filtersearch js-skip-submit" name="tw_filtersearch" placeholder="<?= $escaper->escapeHtmlAttr($block->getSearchPlaceholder()); ?>" >
         <div style="display: none" class="search_no_results"><?= $escaper->escapeHtmlAttr($block->getSearchNoResultsText()); ?></div>
     <?php endif; ?>
     <div class="swatch-attribute-options clearfix">
