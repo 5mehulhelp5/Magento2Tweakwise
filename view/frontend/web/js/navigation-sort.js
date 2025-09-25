@@ -39,6 +39,7 @@ define([
         _handleMoreItemsLink: function () {
             this._sortItems('alternate-sort');
             this.element.find('.default-hidden').show();
+            this.element.find('.swatch-with-count').css('display', 'block');
             this.element.find('.more-items').hide();
 
             return false;
@@ -89,13 +90,21 @@ define([
                 //swatch
                 items = filterInput.parent('div');
                 filterElement = 'a';
-                defaultVisibleItems = 100;
+
+                if (empty(defaultVisibleItems)) {
+                    defaultVisibleItems = 100;
+                }
             }
 
             var filterItems = items.find(filterElement);
 
             filterItems.show().filter(function () {
-                return $(this).find('input').val().toLowerCase().trim().indexOf(value) === -1;
+                var input = $(this).find('input');
+                if (input.length === 0) {
+                    input = $(this).parent().find('input');
+                }
+
+                return input.val().toLowerCase().trim().indexOf(value) === -1;
             }).hide();
 
             //more items visible than max visible items

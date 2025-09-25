@@ -131,6 +131,10 @@ class SwatchRenderer extends RenderLayered
         }
 
         $swatchData = [];
+        $filterItems = [];
+        foreach ($this->filter->getItems() as $item) {
+            $filterItems[$item->getLabel()] = $item;
+        }
 
         /**
          * When this attribute has an id it is an actual magento attribute. If so we can use the parent method to
@@ -155,18 +159,6 @@ class SwatchRenderer extends RenderLayered
                 $this->filter->setAttributeModel($attribute);
                 $optionIds = array_values($swatchAttributeData['options']);
                 $optionLabels = array_keys($swatchAttributeData['options']);
-                $maxItems = $this->getMaxItemsShown();
-
-                $filterItems = [];
-                foreach ($this->filter->getItems() as $item) {
-                    if (!in_array($item->getLabel(), $optionLabels, false)) {
-                        continue;
-                    }
-
-                    $filterItems[$item->getLabel()] = $item;
-                }
-
-                $counter = 0;
 
                 $attributeOptions = [];
                 foreach ($attribute->getOptions() as $option) {
@@ -175,15 +167,13 @@ class SwatchRenderer extends RenderLayered
                     }
 
                     $filterItem = $filterItems[$option->getLabel()] ?? null;
-                    if (!$filterItem) {
+
+                    if ($filterItem === null) {
+                        // Option does not exist in current filter items, skip it
                         continue;
                     }
 
-                    $defaultShow = $counter >= $maxItems;
-                    $filterItem->setData('_default_hidden', $defaultShow);
-
                     $attributeOptions[$option->getValue()] = $this->getOptionViewData($filterItem, $option);
-                    $counter++;
                 }
 
                 $swatchData = [
@@ -197,11 +187,14 @@ class SwatchRenderer extends RenderLayered
         }
 
         //set swatch order
+        $counter = 0;
         $sortedOptions = [];
         foreach ($this->filter->getFacet()->getAttributes() as $attribute) {
             foreach ($swatchData['options'] as $key => $option) {
                 if ($option['label'] == $attribute->getTitle()) {
                     $sortedOptions[$key] = $option;
+                    $filterItems[$option['label']]->setData('_default_hidden', $counter >= $this->getMaxItemsShown());
+                    $counter++;
                     continue 2;
                 }
             }
