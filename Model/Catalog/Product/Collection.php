@@ -168,7 +168,9 @@ class Collection extends AbstractCollection
         parent::_afterLoad();
 
         $this->applyCollectionSizeValues();
-        $this->applyProductImages();
+        if ($this->config->isGroupedProductsEnabled()) {
+            $this->applyProductImages();
+        }
         $this->addVisuals();
 
         return $this;
