@@ -190,6 +190,10 @@ class Collection extends AbstractCollection
                 continue;
             }
 
+            if (empty($productImageUrl)) {
+                continue;
+            }
+
             $this->_items[$productId]->setData('image', $productImageUrl);
             $this->_items[$productId]->setData('small_image', $productImageUrl);
             $this->_items[$productId]->setData('thumbnail', $productImageUrl);
