@@ -244,12 +244,13 @@ define([
          */
         _findHref: function (aElement) {
             var href = aElement.attr('href');
+            var noAjax = aElement.data('no-ajax');
             if (this.options.seoEnabled) {
                 var seoHref = aElement.data('seo-href');
                 href = seoHref ? seoHref : href;
             }
 
-            if (this.options.urlStrategy === 'queryparameter') {
+            if (this.options.urlStrategy === 'queryparameter' && !noAjax) {
                 let url = new URL(href, window.location.origin);
                 url.search = this._getFilterParameters();
                 return url.toString();

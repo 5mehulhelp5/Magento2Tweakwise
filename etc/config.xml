@@ -16,6 +16,7 @@
                 <log>0</log>
                 <log_developer>1</log_developer>
                 <timeout>10</timeout>
+                <analytics_enabled>0</analytics_enabled>
             </general>
             <layered>
                 <enabled>0</enabled>
@@ -29,7 +30,7 @@ cid
             </layered>
             <autocomplete>
                 <enabled>0</enabled>
-                <use_suggestions>0</use_suggestions>
+                <use_suggestions>1</use_suggestions>
                 <show_products>1</show_products>
                 <show_categories>1</show_categories>
                 <show_parent_category>0</show_parent_category>
@@ -43,7 +44,6 @@ cid
             <merchandising_builder>
                 <personal_merchandising>
                     <product_card_lifetime>3600</product_card_lifetime>
-                    <analytics_enabled>0</analytics_enabled>
                 </personal_merchandising>
             </merchandising_builder>
             <recommendations>
