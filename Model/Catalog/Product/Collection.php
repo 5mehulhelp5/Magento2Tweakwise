@@ -171,7 +171,7 @@ class Collection extends AbstractCollection
         if ($this->config->isGroupedProductsEnabled()) {
             $this->applyProductImages();
         }
-        
+
         $this->addVisuals();
 
         return $this;
