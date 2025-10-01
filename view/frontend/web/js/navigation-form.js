@@ -49,10 +49,12 @@ define([
         _fixAjaxHistory: function () {
             if(this.options.ajaxFilters && this.options.ajaxCache && (!window.history.state || !window.history.state.html))
             {
+                const page = new URL(window.location.href).searchParams.get('p');
+                let data = this._getFilterParameters() + (page ? '&p=' + page : '');
                 //if window history is empty, do an ajax request to fill it.
                 this.currentXhr = $.ajax({
                     url: this.options.ajaxEndpoint,
-                    data: this._getFilterParameters(),
+                    data: data,
                     cache: this.options.ajaxCache,
                     success: function (response) {
                         this._replaceState(response);
