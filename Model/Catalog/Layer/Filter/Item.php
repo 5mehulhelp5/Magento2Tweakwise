@@ -193,7 +193,7 @@ class Item extends MagentoItem
     }
 
     /**
-     * magento commerce function alias
+     * Magento commerce function alias
      * @return bool
      */
     public function isApplied(): bool
