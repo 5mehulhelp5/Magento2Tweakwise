@@ -475,7 +475,10 @@ define([
                 }
             }
 
-            resultUrl.search = queryParamsString;
+            if (!resultUrl.searchParams.length === 0) {
+                resultUrl.search = queryParamsString;
+            }
+
             let result = resultUrl.toString();
             result = this._normalizeQueryString(result);
 
