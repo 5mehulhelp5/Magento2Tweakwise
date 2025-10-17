@@ -34,6 +34,7 @@ define([
         },
 
         currentXhr: null,
+        deletedFilters: [],
 
         _create: function () {
             this._hookEvents();
@@ -209,6 +210,8 @@ define([
                     keysForDel.push(key);
                 }
             });
+
+            this.deletedFilters = keysForDel;
 
             //remove empty parameters
             keysForDel.forEach(key => {
@@ -475,7 +478,6 @@ define([
                 }
             }
 
-            resultUrl.search = queryParamsString;
             let result = resultUrl.toString();
             result = this._normalizeQueryString(result);
 
@@ -513,6 +515,12 @@ define([
             responseQueryString.forEach((value, key) => {
                 if (false === uniqueQueryParams.has(key)) {
                     uniqueQueryParams.append(key, value);
+                }
+            });
+
+            uniqueQueryParams.forEach((value, key) => {
+                if (this.deletedFilters.includes(key)) {
+                    uniqueQueryParams.delete(key);
                 }
             });
 
