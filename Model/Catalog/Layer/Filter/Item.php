@@ -191,4 +191,13 @@ class Item extends MagentoItem
     {
         return spl_object_hash($this);
     }
+
+    /**
+     * Magento commerce function alias
+     * @return bool
+     */
+    public function isApplied(): bool
+    {
+        return $this->isActive();
+    }
 }

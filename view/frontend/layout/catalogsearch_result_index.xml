@@ -19,6 +19,7 @@
                 <arguments>
                     <argument name="viewModel" xsi:type="object">Tweakwise\Magento2Tweakwise\ViewModel\PersonalMerchandisingAnalytics</argument>
                     <argument name="analyticsType" xsi:type="string">search</argument>
+                    <argument name="tweakwise_navigation_config" xsi:type="object">Tweakwise\Magento2Tweakwise\Model\NavigationConfig\Category</argument>
                 </arguments>
             </block>
             <block ifconfig="tweakwise/search/searchbanner" before="-" class="Tweakwise\Magento2Tweakwise\Block\Navigation\SearchBanner\SearchBannerRenderer" name="navigation.search.banner.list.top" template="Tweakwise_Magento2Tweakwise::searchbanner/search.banner.list.top.phtml">
