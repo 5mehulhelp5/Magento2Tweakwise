@@ -280,7 +280,7 @@ class SwatchRenderer extends RenderLayered
             return $text;
         }
 
-        return 'Meer filters tonen';
+        return __('Show more filters');
     }
 
     /**
@@ -293,6 +293,6 @@ class SwatchRenderer extends RenderLayered
             return $text;
         }
 
-        return 'Minder filters tonen';
+        return __('Show less filters');
     }
 }
