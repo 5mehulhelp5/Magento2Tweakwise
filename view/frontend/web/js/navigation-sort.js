@@ -114,6 +114,11 @@ define([
             var filterItems = items.find(filterElement);
 
             filterItems.show().filter(function () {
+                var input = $(this).find('input');
+                if (input.length === 0) {
+                    input = $(this).parent().find('input');
+                }
+
                 return self._asciiFold(input.val()).indexOf(self._asciiFold(value)) === -1;
             }).hide();
 
