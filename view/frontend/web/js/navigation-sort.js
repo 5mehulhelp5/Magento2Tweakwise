@@ -39,6 +39,7 @@ define([
         _handleMoreItemsLink: function () {
             this._sortItems('alternate-sort');
             this.element.find('.default-hidden').show();
+            this.element.find('.swatch-with-count').css('display', 'block');
             this.element.find('.more-items').hide();
 
             return false;
@@ -75,6 +76,20 @@ define([
             }).appendTo(list);
         },
 
+        _asciiFold: function (value) {
+            const SPECIAL_MAP = {
+                'ß': 'ss', 'Æ': 'AE', 'æ': 'ae', 'Ø': 'O', 'ø': 'o', 'Œ': 'OE', 'œ': 'oe',
+                'Þ': 'Th', 'þ': 'th', 'Đ': 'D', 'đ': 'd', 'Ł': 'L', 'ł': 'l', 'Ħ': 'H', 'ħ': 'h'
+            };
+            const SPECIAL_REGEX = new RegExp(Object.keys(SPECIAL_MAP).join('|'), 'g');
+            return value.normalize('NFKD')
+                .replace(/\p{M}/gu, '')
+                .replace(SPECIAL_REGEX, ch => SPECIAL_MAP[ch])
+                .normalize('NFC')
+                .toLowerCase()
+                .trim();
+        },
+
         _handleFilterSearch: function () {
             var filterInput = this.element.find('.tw_filtersearch');
             var value = filterInput.val().toLowerCase().trim();
@@ -84,18 +99,27 @@ define([
             var filterElement = 'li';
             var moreItems = filterInput.parent('div').find('.more-items');
             var lessItems = filterInput.parent('div').find('.less-items');
+            var self = this;
 
             if (items.length === 0) {
                 //swatch
                 items = filterInput.parent('div');
                 filterElement = 'a';
-                defaultVisibleItems = 100;
+
+                if (!defaultVisibleItems) {
+                    defaultVisibleItems = 100;
+                }
             }
 
             var filterItems = items.find(filterElement);
 
             filterItems.show().filter(function () {
-                return $(this).find('input').val().toLowerCase().trim().indexOf(value) === -1;
+                var input = $(this).find('input');
+                if (input.length === 0) {
+                    input = $(this).parent().find('input');
+                }
+
+                return self._asciiFold(input.val()).indexOf(self._asciiFold(value)) === -1;
             }).hide();
 
             //more items visible than max visible items
