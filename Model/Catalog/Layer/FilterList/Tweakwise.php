@@ -179,6 +179,10 @@ class Tweakwise
             return false;
         }
 
+        if ($filter->getFacet()->getFacetSettings()->getSource() === SettingsType::SOURCE_CATEGORY) {
+            return false;
+        }
+
         if (count($filter->getActiveItems()) > 0) {
             return false;
         }

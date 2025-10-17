@@ -80,6 +80,7 @@ class Router implements RouterInterface
 
         if ($url) {
             $redirect = $this->actionFactory->create(Redirect::class);
+            $redirect->getResponse()->setHttpResponseCode(301);
             // @phpstan-ignore-next-line
             $redirect->getResponse()->setRedirect($url);
             return $redirect;

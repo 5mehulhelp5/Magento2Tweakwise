@@ -167,7 +167,10 @@ class Collection extends AbstractCollection
         parent::_afterLoad();
 
         $this->applyCollectionSizeValues();
-        $this->applyProductImages();
+        if ($this->config->isGroupedProductsEnabled()) {
+            $this->applyProductImages();
+        }
+
         $this->addVisuals();
 
         return $this;
@@ -183,6 +186,10 @@ class Collection extends AbstractCollection
                 !isset($this->_items[$productId]) ||
                 $this->_items[$productId]->getTypeId() !== Configurable::TYPE_CODE
             ) {
+                continue;
+            }
+
+            if (empty($productImageUrl)) {
                 continue;
             }
 
