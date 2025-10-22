@@ -22,6 +22,7 @@ use Tweakwise\Magento2Tweakwise\Model\Client\Request\ProductSearchRequest;
 use Tweakwise\Magento2Tweakwise\Model\Config as TweakwiseConfig;
 use Magento\Catalog\Api\Data\CategoryInterface;
 use Magento\Catalog\Model\Category;
+use Magento\Catalog\Model\Product\ProductList\ToolbarMemorizer;
 use Magento\Framework\App\Request\Http as MagentoHttpRequest;
 use Magento\Framework\Stdlib\CookieManagerInterface;
 use Tweakwise\Magento2Tweakwise\Model\Catalog\Layer\Url;
@@ -107,6 +108,11 @@ class QueryParameterStrategy implements UrlInterface, FilterApplierInterface, Ca
     private SerializerInterface $serializer;
 
     /**
+     * @var ToolbarMemorizer
+     */
+    private ToolbarMemorizer $toolbarMemorizer;
+
+    /**
      * Magento constructor.
      *
      * @param UrlModel $url
@@ -124,7 +130,8 @@ class QueryParameterStrategy implements UrlInterface, FilterApplierInterface, Ca
         TweakwiseConfig $config,
         Url $layerUrl,
         Data $searchConfig,
-        SerializerInterface $serializer
+        SerializerInterface $serializer,
+        ToolbarMemorizer $toolbarMemorizer
     ) {
         $this->url = $url;
         $this->strategyHelper = $strategyHelper;
@@ -133,6 +140,7 @@ class QueryParameterStrategy implements UrlInterface, FilterApplierInterface, Ca
         $this->layerUrl = $layerUrl;
         $this->searchConfig = $searchConfig;
         $this->serializer = $serializer;
+        $this->toolbarMemorizer = $toolbarMemorizer;
     }
 
     /**
@@ -470,6 +478,14 @@ class QueryParameterStrategy implements UrlInterface, FilterApplierInterface, Ca
             $request->setQuery($query);
 
             $navigationRequest->setOrder($sortOrder);
+        }
+
+        if (!$sortOrder) {
+            $memorizedSortOrder = $this->toolbarMemorizer->getOrder();
+
+            if ($memorizedSortOrder) {
+                $navigationRequest->setOrder($memorizedSortOrder);
+            }
         }
 
         $page = $this->getPage($request);
