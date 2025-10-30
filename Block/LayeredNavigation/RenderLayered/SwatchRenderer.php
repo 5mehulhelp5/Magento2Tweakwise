@@ -113,6 +113,15 @@ class SwatchRenderer extends RenderLayered
     }
 
     /**
+     * @param Item $item
+     * @return bool
+     */
+    public function itemDefaultHidden(Item $item): bool
+    {
+        return (bool) $item->getData('_default_hidden');
+    }
+
+    /**
      * @return array
      * @throws RuntimeException
      * phpcs:disable Generic.Metrics.CyclomaticComplexity.TooHigh
@@ -127,6 +136,10 @@ class SwatchRenderer extends RenderLayered
         }
 
         $swatchData = [];
+        $filterItems = [];
+        foreach ($this->filter->getItems() as $item) {
+            $filterItems[$item->getLabel()] = $item;
+        }
 
         /**
          * When this attribute has an id it is an actual magento attribute. If so we can use the parent method to
@@ -153,16 +166,6 @@ class SwatchRenderer extends RenderLayered
                 $optionIds = array_values($swatchAttributeData['options']);
                 $optionLabels = array_keys($swatchAttributeData['options']);
 
-                $filterItems = [];
-                foreach ($this->filter->getItems() as $item) {
-                    // phpcs:disable SlevomatCodingStandard.Functions.StrictCall.NonStrictComparison
-                    if (!in_array($item->getLabel(), $optionLabels, false)) {
-                        continue;
-                    }
-
-                    $filterItems[$item->getLabel()] = $item;
-                }
-
                 $attributeOptions = [];
                 foreach ($attribute->getOptions() as $option) {
                     // phpcs:disable SlevomatCodingStandard.Functions.StrictCall.NonStrictComparison
@@ -171,7 +174,9 @@ class SwatchRenderer extends RenderLayered
                     }
 
                     $filterItem = $filterItems[$option->getLabel()] ?? null;
-                    if (!$filterItem) {
+
+                    if ($filterItem === null) {
+                        // Option does not exist in current filter items, skip it
                         continue;
                     }
 
@@ -190,11 +195,14 @@ class SwatchRenderer extends RenderLayered
         }
 
         //set swatch order
+        $counter = 0;
         $sortedOptions = [];
         foreach ($this->filter->getFacet()->getAttributes() as $attribute) {
             foreach ($swatchData['options'] as $key => $option) {
                 if ($option['label'] === $attribute->getTitle()) {
                     $sortedOptions[$key] = $option;
+                    $filterItems[$option['label']]->setData('_default_hidden', $counter >= $this->getMaxItemsShown());
+                    $counter++;
                     continue 2;
                 }
             }
@@ -212,6 +220,22 @@ class SwatchRenderer extends RenderLayered
     public function getItemForSwatch($id)
     {
         return $this->filter->getItemByOptionId($id);
+    }
+
+    /**
+     * @return int
+     */
+    public function getMaxItemsShown(): int
+    {
+        return $this->getFacetSettings()->getNumberOfShownAttributes();
+    }
+
+    /**
+     * @return bool
+     */
+    public function hasHiddenItems(): bool
+    {
+        return count($this->getSwatchData()['options']) > $this->getMaxItemsShown();
     }
 
     /**
@@ -253,5 +277,31 @@ class SwatchRenderer extends RenderLayered
     public function getSearchNoResultsText()
     {
         return $this->filter->getFacet()->getFacetSettings()->getSearchNoResultsText();
+    }
+
+    /**
+     * @return string
+     */
+    public function getMoreItemText(): string
+    {
+        $text = $this->getFacetSettings()->getExpandText();
+        if ($text) {
+            return $text;
+        }
+
+        return __('Show more filters');
+    }
+
+    /**
+     * @return string
+     */
+    public function getLessItemText(): string
+    {
+        $text = $this->getFacetSettings()->getCollapseText();
+        if ($text) {
+            return $text;
+        }
+
+        return __('Show less filters');
     }
 }
