@@ -164,7 +164,6 @@ class SwatchRenderer extends RenderLayered
                 // @phpstan-ignore-next-line
                 $this->filter->setAttributeModel($attribute);
                 $optionIds = array_values($swatchAttributeData['options']);
-                $optionLabels = array_keys($swatchAttributeData['options']);
 
                 $attributeOptions = [];
                 foreach ($attribute->getOptions() as $option) {
