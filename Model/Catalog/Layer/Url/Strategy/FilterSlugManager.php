@@ -121,7 +121,7 @@ class FilterSlugManager
         if (!isset($allTranslations['option']['value'])) {
             return;
         }
-        foreach ($allTranslations['option']['value'] as $optionId => $optionTranslations) {
+        foreach ($allTranslations['option']['value'] as $optionTranslations) {
             foreach ($optionTranslations as $storeId => $optionLabel) {
                 if (empty($optionLabel) || ctype_space((string)$optionLabel)) {
                     continue;
