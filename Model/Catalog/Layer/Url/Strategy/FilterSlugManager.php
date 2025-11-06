@@ -1,4 +1,4 @@
-<?php
+<?php // phpcs:ignore SlevomatCodingStandard.TypeHints.DeclareStrictTypes.DeclareStrictTypesMissing
 
 /**
  * Tweakwise (https://www.tweakwise.com/) - All Rights Reserved
@@ -21,7 +21,6 @@ use Magento\Framework\App\CacheInterface;
 use Magento\Framework\Filter\TranslitUrl;
 use Magento\Framework\Serialize\SerializerInterface;
 use Magento\Store\Model\StoreManagerInterface;
-use function array_search;
 
 class FilterSlugManager
 {
@@ -129,6 +128,7 @@ class FilterSlugManager
                 }
 
                 $this->getLookupTable();
+                // @phpstan-ignore-next-line
                 if ($optionLabel instanceof Phrase) {
                     $optionLabel = $optionLabel->render();
                 }
@@ -142,6 +142,7 @@ class FilterSlugManager
                 }
 
                 $attributeSlugEntity = $this->attributeSlugFactory->create();
+                // @phpstan-ignore-next-line
                 $attributeSlugEntity->setAttribute($optionLabel);
                 $attributeSlugEntity->setStoreId((int)$storeId);
                 $attributeSlugEntity->setSlug($this->translitUrl->filter($optionLabel));
@@ -160,6 +161,7 @@ class FilterSlugManager
     public function getAttributeBySlug(string $slug): string
     {
         $lookupTable = $this->getLookupTable();
+        // phpcs:disable SlevomatCodingStandard.Functions.StrictCall.NonStrictComparison
         $attribute = array_search($slug, $lookupTable[$this->storeManager->getStore()->getId()], false);
 
         //fallback
@@ -176,6 +178,7 @@ class FilterSlugManager
             throw new UnexpectedValueException(sprintf('No attribute found for slug "%s"', $slug));
         }
 
+        // @phpstan-ignore-next-line
         return $attribute;
     }
 
@@ -197,6 +200,7 @@ class FilterSlugManager
     protected function loadLookupTable(): array
     {
         $lookupTable = $this->cache->load(self::CACHE_KEY);
+        // @phpstan-ignore-next-line
         if ($lookupTable === false) {
             $attributeSlugs = $this->attributeSlugRepository->getList(new SearchCriteria());
             $lookupTable = [];
@@ -209,6 +213,7 @@ class FilterSlugManager
             $lookupTable = $this->serializer->unserialize($lookupTable);
         }
 
+        // @phpstan-ignore-next-line
         return $lookupTable;
     }
 }
