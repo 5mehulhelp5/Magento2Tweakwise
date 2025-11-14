@@ -53,7 +53,7 @@ class SendAddToWishlistEvent implements ObserverInterface
 
             $this->sendAddToWishlistEvent($observer->getEvent()->getProduct());
         } catch (Exception $e) {
-            $this->logger->error('Tweakwise Add To Cart event could not be sent', ['message' => $e->getMessage()]);
+            $this->logger->error('Tweakwise Add To Wishlist event could not be sent', ['message' => $e->getMessage()]);
             return;
         }
     }
