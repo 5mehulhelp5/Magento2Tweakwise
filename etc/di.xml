@@ -245,6 +245,11 @@
             <argument name="requestFactory" xsi:type="object">Tweakwise\Magento2Tweakwise\Model\Client\RequestFactory\AnalyticsRequest</argument>
         </arguments>
     </type>
+    <type name="Tweakwise\Magento2Tweakwise\Observer\Event\SendAddToWishlistEvent">
+        <arguments>
+            <argument name="requestFactory" xsi:type="object">Tweakwise\Magento2Tweakwise\Model\Client\RequestFactory\AnalyticsRequest</argument>
+        </arguments>
+    </type>
     <type name="Tweakwise\Magento2Tweakwise\Controller\Ajax\Analytics">
         <arguments>
             <argument name="requestFactory" xsi:type="object">Tweakwise\Magento2Tweakwise\Model\Client\RequestFactory\AnalyticsRequest</argument>
