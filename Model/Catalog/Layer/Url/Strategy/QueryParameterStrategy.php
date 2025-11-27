@@ -98,21 +98,6 @@ class QueryParameterStrategy implements UrlInterface, FilterApplierInterface, Ca
     protected $layerUrl;
 
     /**
-     * @var Data
-     */
-    private Data $searchConfig;
-
-    /**
-     * @var SerializerInterface
-     */
-    private SerializerInterface $serializer;
-
-    /**
-     * @var ToolbarMemorizer
-     */
-    private ToolbarMemorizer $toolbarMemorizer;
-
-    /**
      * Magento constructor.
      *
      * @param UrlModel $url
@@ -120,8 +105,7 @@ class QueryParameterStrategy implements UrlInterface, FilterApplierInterface, Ca
      * @param CookieManagerInterface $cookieManager
      * @param TweakwiseConfig $config
      * @param Url $layerUrl
-     * @param Data $searchConfig
-     * @param SerializerInterface $serializer
+     * @param ToolbarMemorizer $toolbarMemorizer
      */
     public function __construct(
         UrlModel $url,
@@ -129,20 +113,13 @@ class QueryParameterStrategy implements UrlInterface, FilterApplierInterface, Ca
         CookieManagerInterface $cookieManager,
         TweakwiseConfig $config,
         Url $layerUrl,
-        Data $searchConfig,
-        SerializerInterface $serializer,
-        ToolbarMemorizer $toolbarMemorizer
-        private Data $searchConfig,
-        private SerializerInterface $serializer
+        private readonly ToolbarMemorizer $toolbarMemorizer
     ) {
         $this->url = $url;
         $this->strategyHelper = $strategyHelper;
         $this->cookieManager = $cookieManager;
         $this->tweakwiseConfig = $config;
         $this->layerUrl = $layerUrl;
-        $this->searchConfig = $searchConfig;
-        $this->serializer = $serializer;
-        $this->toolbarMemorizer = $toolbarMemorizer;
     }
 
     /**
