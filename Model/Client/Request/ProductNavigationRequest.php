@@ -56,6 +56,11 @@ class ProductNavigationRequest extends Request
      */
     public function addAttributeFilter(string $attribute, $value)
     {
+        $trimmed = trim((string)($value ?? ''));
+        if ($trimmed === '') {
+            return $this;
+        }
+
         $this->addParameter('tn_fk_' . $attribute, trim((string)($value ?? '')));
         return $this;
     }
