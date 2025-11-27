@@ -1,4 +1,4 @@
-<?php
+<?php // phpcs:ignore SlevomatCodingStandard.TypeHints.DeclareStrictTypes.DeclareStrictTypesMissing
 
 /**
  * Tweakwise (https://www.tweakwise.com/) - All Rights Reserved
@@ -29,7 +29,7 @@ use Tweakwise\Magento2Tweakwise\Model\Catalog\Layer\Url;
 use Magento\Search\Helper\Data;
 
 /**
- * @SuppressWarnings(PHPMD.ExcessiveClassComplexity)
+ * @SuppressWarnings("PHPMD.ExcessiveClassComplexity")
  */
 class QueryParameterStrategy implements UrlInterface, FilterApplierInterface, CategoryUrlInterface
 {
@@ -132,6 +132,8 @@ class QueryParameterStrategy implements UrlInterface, FilterApplierInterface, Ca
         Data $searchConfig,
         SerializerInterface $serializer,
         ToolbarMemorizer $toolbarMemorizer
+        private Data $searchConfig,
+        private SerializerInterface $serializer
     ) {
         $this->url = $url;
         $this->strategyHelper = $strategyHelper;
@@ -174,16 +176,19 @@ class QueryParameterStrategy implements UrlInterface, FilterApplierInterface, Ca
         ];
 
         foreach ($selectedFilters as $filter => $value) {
-            if (!array_key_exists($filter, $query) && (!in_array($filter, $reservedParams))) {
-                $query[$filter] = $value;
+            // phpcs:disable SlevomatCodingStandard.Functions.StrictCall.StrictParameterMissing
+            if (array_key_exists($filter, $query) || (in_array($filter, $reservedParams))) {
+                continue;
             }
+
+            $query[$filter] = $value;
         }
 
         $params['_query'] = $query;
         $params['_escape'] = false;
 
         //remove p=1 from url
-        if (!empty($params['_query']['p']) && ($params['_query']['p'] === "1")) {
+        if (!empty($params['_query']['p']) && ($params['_query']['p'] === '1')) {
             unset($params['_query']['p']);
         }
 
@@ -256,13 +261,14 @@ class QueryParameterStrategy implements UrlInterface, FilterApplierInterface, Ca
     {
         $category = $this->strategyHelper->getCategoryFromItem($item);
         if (!$this->getSearch($request)) {
+            // @phpstan-ignore-next-line
             $categoryUrl = $category->getUrl();
             $categoryUrlPath = \parse_url($categoryUrl, PHP_URL_PATH);
 
             $url = $this->url->getDirectUrl(
                 sprintf(
                     '%s/',
-                    trim($categoryUrlPath, '/'),
+                    trim($categoryUrlPath, '/'), // @phpstan-ignore-line
                 ),
                 [
                     '_query' => $this->getAttributeFilters($request)
@@ -277,6 +283,7 @@ class QueryParameterStrategy implements UrlInterface, FilterApplierInterface, Ca
 
             $explode = explode('/', $url);
 
+            // @phpstan-ignore-next-line
             if (is_array($explode)) {
                 $url = implode('/', array_unique($explode));
             }
@@ -334,6 +341,7 @@ class QueryParameterStrategy implements UrlInterface, FilterApplierInterface, Ca
         $values = $this->getRequestValues($request, $item);
 
         if ($settings->getIsMultipleSelect()) {
+            // @phpstan-ignore-next-line
             $values[] = $value;
             $values = array_unique($values);
 
@@ -355,9 +363,11 @@ class QueryParameterStrategy implements UrlInterface, FilterApplierInterface, Ca
         $queryUrl = $this->queryUrlCache[$hash];
 
         if (!$settings->getIsMultipleSelect()) {
+            // @phpstan-ignore-next-line
             $values[] = $value;
         }
 
+        // @phpstan-ignore-next-line
         foreach ($values as $key => $value) {
             $queryUrl = str_replace('__VALUE.' . $key . '__', $value, $queryUrl);
         }
@@ -369,6 +379,7 @@ class QueryParameterStrategy implements UrlInterface, FilterApplierInterface, Ca
      * @param MagentoHttpRequest $request
      * @param Item[] $filters
      * @return string
+     * phpcs:disable Generic.CodeAnalysis.UnusedFunctionParameter.FoundInImplementedInterfaceAfterLastUsed
      */
     public function buildFilterUrl(MagentoHttpRequest $request, array $filters = []): string
     {
@@ -391,6 +402,8 @@ class QueryParameterStrategy implements UrlInterface, FilterApplierInterface, Ca
             $value = $attribute->getTitle();
             $values = $this->getRequestValues($request, $item);
 
+            // phpcs:disable SlevomatCodingStandard.Functions.StrictCall.NonStrictComparison
+            // @phpstan-ignore-next-line
             $index = array_search($value, $values, false);
             if ($index !== false) {
                 /** @noinspection OffsetOperationsInspection */
@@ -406,7 +419,8 @@ class QueryParameterStrategy implements UrlInterface, FilterApplierInterface, Ca
     }
 
     /**
-     * {@inheritdoc}
+     * @param MagentoHttpRequest $request
+     * @return array
      */
     protected function getCategoryFilters(MagentoHttpRequest $request)
     {
@@ -420,12 +434,14 @@ class QueryParameterStrategy implements UrlInterface, FilterApplierInterface, Ca
     }
 
     /**
-     * {@inheritdoc}
+     * @param MagentoHttpRequest $request
+     * @return array
      */
     public function getAttributeFilters(MagentoHttpRequest $request)
     {
         $result = [];
         foreach ($request->getQuery() as $attribute => $value) {
+            // phpcs:disable SlevomatCodingStandard.Functions.StrictCall.NonStrictComparison
             if (in_array(mb_strtolower($attribute), $this->ignoredQueryParameters, false)) {
                 continue;
             }
@@ -451,8 +467,8 @@ class QueryParameterStrategy implements UrlInterface, FilterApplierInterface, Ca
      * @param ProductNavigationRequest $navigationRequest
      * @return FilterApplierInterface
      * phpcs:disable Generic.Metrics.CyclomaticComplexity.TooHigh
-     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
-     * @SuppressWarnings(PHPMD.NPathComplexity)
+     * @SuppressWarnings("PHPMD.CyclomaticComplexity")
+     * @SuppressWarnings("PHPMD.NPathComplexity")
      */
     public function apply(
         MagentoHttpRequest $request,
@@ -568,6 +584,7 @@ class QueryParameterStrategy implements UrlInterface, FilterApplierInterface, Ca
             }
         }
 
+        // @phpstan-ignore-next-line
         $search = mb_substr((string) $search, 0, $searchLength);
 
         return $search;
