@@ -98,16 +98,6 @@ class QueryParameterStrategy implements UrlInterface, FilterApplierInterface, Ca
     protected $layerUrl;
 
     /**
-     * @var Data
-     */
-    private Data $searchConfig;
-
-    /**
-     * @var SerializerInterface
-     */
-    private SerializerInterface $serializer;
-
-    /**
      * Magento constructor.
      *
      * @param UrlModel $url
@@ -125,8 +115,8 @@ class QueryParameterStrategy implements UrlInterface, FilterApplierInterface, Ca
         CookieManagerInterface $cookieManager,
         TweakwiseConfig $config,
         Url $layerUrl,
-        Data $searchConfig,
-        SerializerInterface $serializer,
+        private Data $searchConfig,
+        private SerializerInterface $serializer,
         private readonly ToolbarMemorizer $toolbarMemorizer
     ) {
         $this->url = $url;
