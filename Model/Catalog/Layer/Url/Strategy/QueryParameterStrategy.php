@@ -124,8 +124,6 @@ class QueryParameterStrategy implements UrlInterface, FilterApplierInterface, Ca
         $this->cookieManager = $cookieManager;
         $this->tweakwiseConfig = $config;
         $this->layerUrl = $layerUrl;
-        $this->searchConfig = $searchConfig;
-        $this->serializer = $serializer;
     }
 
     /**
