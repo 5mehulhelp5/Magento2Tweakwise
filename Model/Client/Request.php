@@ -364,7 +364,7 @@ class Request
     /**
      * @return void
      */
-    public function setLang(): void
+    public function setLanguage(): void
     {
         $language = $this->config->getLanguage();
         if (!$language) {

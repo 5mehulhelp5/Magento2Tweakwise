@@ -45,7 +45,7 @@ class RequestFactory
         if (!$request instanceof Request) {
             throw new InvalidArgumentException(sprintf('%s is not an instanceof %s', $this->type, Request::class));
         }
-        $request->setLang();
+        $request->setLanguage();
 
         return $request;
     }
