@@ -480,6 +480,7 @@ define([
                 }
             }
 
+            resultUrl.search = queryParamsString;
             let result = resultUrl.toString();
             result = this._normalizeQueryString(result);
 
