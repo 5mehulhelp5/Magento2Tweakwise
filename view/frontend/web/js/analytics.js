@@ -36,10 +36,13 @@ define('Tweakwise_Magento2Tweakwise/js/analytics', ['jquery'], function($) {
                 url: config.analyticsEndpoint,
                 type: 'POST',
                 data: {
-                    values: {
-                        itemclick: productId
-                    },
-                    requestId: config.twRequestId
+                    eventData: [
+                        {
+                            type: 'itemclick',
+                            value: productId,
+                            requestId: config.twRequestId
+                        }
+                    ]
                 },
                 cache: false,
                 success: function(response) {
@@ -57,9 +60,9 @@ define('Tweakwise_Magento2Tweakwise/js/analytics', ['jquery'], function($) {
     return function(config) {
         $(document).ready(function() {
 
-            if (config.values) {
+            if (config.eventData) {
                 var requestData = {
-                    values: config.values
+                    eventData: config.eventData
                 };
 
                 $.ajax({
