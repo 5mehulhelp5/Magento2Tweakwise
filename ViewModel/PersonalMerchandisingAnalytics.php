@@ -112,6 +112,7 @@ class PersonalMerchandisingAnalytics implements ArgumentInterface
             'product'   => $this->getProductKey(),
             'search'    => $this->getSearchQuery(),
             'itemclick' => $this->getTwRequestId(),
+            'session_start' => 'session_start',
             default     => '',
         };
     }

@@ -16,5 +16,14 @@
         <referenceBlock name="top.search">
             <block class="Tweakwise\Magento2Tweakwise\Block\Autocomplete\FormMini" ifconfig="tweakwise/autocomplete/enabled" name="tweakwise-autocomplete" template="Tweakwise_Magento2Tweakwise::form.mini.phtml"/>
         </referenceBlock>
+    <!-- TODO: THIS IS LOADED MULTIPLE TIMES ON PDP FOR EXAMPLE NOW, FIX THIS -->
+        <referenceContainer name="content">
+            <block class="Magento\Framework\View\Element\Template" name="event.sessionStart" template="Tweakwise_Magento2Tweakwise::analytics.phtml" ifconfig="tweakwise/general/analytics_enabled">
+                <arguments>
+                    <argument name="viewModel" xsi:type="object">Tweakwise\Magento2Tweakwise\ViewModel\PersonalMerchandisingAnalytics</argument>
+                    <argument name="analyticsType" xsi:type="string">session_start</argument>
+                </arguments>
+            </block>
+        </referenceContainer>
     </body>
 </page>

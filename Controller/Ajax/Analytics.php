@@ -11,6 +11,7 @@ use Tweakwise\Magento2Tweakwise\Model\Client\RequestFactory;
 use Magento\Framework\App\ResponseInterface;
 use Magento\Framework\Controller\Result\Json;
 use Magento\Framework\Controller\ResultInterface;
+use Tweakwise\Magento2Tweakwise\Service\SessionStartEventService;
 use Tweakwise\Magento2TweakwiseExport\Model\Helper;
 use Magento\Store\Model\StoreManagerInterface;
 use Exception;
@@ -21,16 +22,15 @@ use InvalidArgumentException;
 class Analytics extends Action
 {
     /**
-     * Constructor.
-     *
-     * @param Context                     $context
-     * @param JsonFactory                 $resultJsonFactory
-     * @param Client                      $client
+     * @param Context $context
+     * @param JsonFactory $resultJsonFactory
+     * @param Client $client
      * @param PersonalMerchandisingConfig $config
-     * @param RequestFactory              $requestFactory
-     * @param Helper                      $helper
-     * @param StoreManagerInterface       $storeManager
-     * @param JsonSerializer              $jsonSerializer
+     * @param RequestFactory $requestFactory
+     * @param Helper $helper
+     * @param StoreManagerInterface $storeManager
+     * @param JsonSerializer $jsonSerializer
+     * @param SessionStartEventService $sessionStartEventCookieService
      */
     public function __construct(
         Context $context,
@@ -40,7 +40,8 @@ class Analytics extends Action
         private readonly RequestFactory $requestFactory,
         private readonly Helper $helper,
         private readonly StoreManagerInterface $storeManager,
-        private readonly JsonSerializer $jsonSerializer
+        private readonly JsonSerializer $jsonSerializer,
+        private readonly SessionStartEventService $sessionStartEventCookieService,
     ) {
         parent::__construct($context);
     }
@@ -113,6 +114,13 @@ class Analytics extends Action
                 break;
             case 'itemclick':
                 $this->handleItemClickType($tweakwiseRequest, $value, $storeId);
+                break;
+            case 'session_start':
+                if ($this->sessionStartEventCookieService->isSessionStartEventSent()) {
+                    return;
+                }
+
+                $this->sessionStartEventCookieService->handleSessionStartType($tweakwiseRequest);
                 break;
             default:
                 throw new InvalidArgumentException('Invalid type parameter.');
