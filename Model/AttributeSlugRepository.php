@@ -178,7 +178,7 @@ class AttributeSlugRepository implements AttributeSlugRepositoryInterface
      * @return AttributeSlugInterface
      * @throws NoSuchEntityException
      */
-    public function findBySlug(string $slug, $storeId = 0): AttributeSlugInterface
+    public function findBySlug(string $slug, int $storeId = 0): AttributeSlugInterface
     {
         $collection = $this->collectionFactory->create()
             ->addFieldToFilter('slug', $slug)

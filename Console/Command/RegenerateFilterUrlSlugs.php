@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Tweakwise\Magento2Tweakwise\Console\Command;
 
 use Exception;
+use Magento\Eav\Model\Entity\Attribute\Option;
 use Magento\Framework\Api\SearchCriteriaBuilder;
 use Magento\Framework\Console\Cli;
 use Symfony\Component\Console\Command\Command;
@@ -52,8 +53,8 @@ class RegenerateFilterUrlSlugs extends Command
      *
      * @return int
      * @throws LocalizedException
+     * phpcs:disable Generic.CodeAnalysis.UnusedFunctionParameter.FoundInExtendedClassBeforeLastUsed
      */
-    //phpcs:disable Generic.CodeAnalysis.UnusedFunctionParameter.FoundInExtendedClassBeforeLastUsed
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $output->writeln('<info>Start regenerating filter url slugs</info>');
@@ -130,7 +131,7 @@ class RegenerateFilterUrlSlugs extends Command
      * @param int $storeId
      * @return void
      */
-    protected function regenerateSlugsForAttributeOption($option, $storeId): void
+    protected function regenerateSlugsForAttributeOption(Option $option, int $storeId): void
     {
         $this->filterSlugManager->createFilterSlugByOption($option, $storeId);
     }

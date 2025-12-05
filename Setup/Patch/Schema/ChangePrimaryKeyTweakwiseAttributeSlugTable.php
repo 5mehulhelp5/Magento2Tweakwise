@@ -10,13 +10,16 @@ use Magento\Framework\DB\Ddl\Table;
 
 class ChangePrimaryKeyTweakwiseAttributeSlugTable implements SchemaPatchInterface
 {
-    private $schemaSetup;
-
-    public function __construct(SchemaSetupInterface $schemaSetup)
+    /**
+     * @var SchemaSetupInterface
+     */
+    public function __construct(private readonly SchemaSetupInterface $schemaSetup)
     {
-        $this->schemaSetup = $schemaSetup;
     }
 
+    /**
+     * @return void
+     */
     public function apply()
     {
         $setup = $this->schemaSetup;
@@ -48,11 +51,17 @@ class ChangePrimaryKeyTweakwiseAttributeSlugTable implements SchemaPatchInterfac
         $setup->endSetup();
     }
 
+    /**
+     * @return string[]
+     */
     public static function getDependencies()
     {
         return [];
     }
 
+    /**
+     * @return string[]
+     */
     public function getAliases()
     {
         return [];

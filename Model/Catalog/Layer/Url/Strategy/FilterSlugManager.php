@@ -9,7 +9,8 @@
 
 namespace Tweakwise\Magento2Tweakwise\Model\Catalog\Layer\Url\Strategy;
 
-use Magento\Catalog\Model\ResourceModel\Eav\Attribute\Interceptor;
+use Magento\Catalog\Model\ResourceModel\Eav\Attribute;
+use Magento\Eav\Model\Entity\Attribute\Option;
 use Magento\Framework\Phrase;
 use Tweakwise\Magento2Tweakwise\Api\AttributeSlugRepositoryInterface;
 use Tweakwise\Magento2Tweakwise\Api\Data\AttributeSlugInterfaceFactory;
@@ -62,6 +63,7 @@ class FilterSlugManager
      * @param AttributeSlugInterfaceFactory $attributeSlugFactory
      * @param CacheInterface $cache
      * @param SerializerInterface $serializer
+     * @param StoreManagerInterface $storeManager
      */
     public function __construct(
         TranslitUrl $translitUrl,
@@ -86,9 +88,10 @@ class FilterSlugManager
     {
         $lookupTable = $this->getLookupTable();
         $attribute = strtolower($filterItem->getAttribute()->getTitle());
+        $storeId = $this->storeManager->getStore()->getId();
 
-        if (!empty($lookupTable[$this->storeManager->getStore()->getId()][$attribute])) {
-            return $lookupTable[$this->storeManager->getStore()->getId()][$attribute];
+        if (!empty($lookupTable[$storeId][$attribute])) {
+            return $lookupTable[$storeId][$attribute];
         }
 
         $slug = $this->translitUrl->filter($attribute);
@@ -102,20 +105,19 @@ class FilterSlugManager
         $attributeSlugEntity = $this->attributeSlugFactory->create();
         $attributeSlugEntity->setAttribute($attribute);
         $attributeSlugEntity->setSlug($slug);
-        $attributeSlugEntity->setStoreId($this->storeManager->getStore()->getId());
+        $attributeSlugEntity->setStoreId($storeId);
 
         $savedSlug = $this->attributeSlugRepository->save($attributeSlugEntity);
-        $slug = $savedSlug->getSlug();
         $this->cache->remove(self::CACHE_KEY);
 
-        return $slug;
+        return $savedSlug->getSlug();
     }
 
     /**
-     * @param \Magento\Eav\Api\Data\AttributeOptionInterface[] $options
+     * @param Attribute $options
      * @return void
      */
-    public function createFilterSlugByAttributeOptions(Interceptor $options)
+    public function createFilterSlugByAttributeOptions(Attribute $options)
     {
         $allTranslations = $options->toArray();
         if (!isset($allTranslations['option']['value'])) {
@@ -235,7 +237,7 @@ class FilterSlugManager
      * @param int|string $storeId
      * @return void
      */
-    public function createFilterSlugByOption($option, $storeId): void
+    public function createFilterSlugByOption(Option $option, int $storeId): void
     {
         if (empty($this->translitUrl->filter($option['label'])) || ctype_space((string)$option['label'])) {
             return;
