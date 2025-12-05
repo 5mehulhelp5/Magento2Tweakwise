@@ -105,7 +105,7 @@ class PersonalMerchandisingAnalytics implements ArgumentInterface
      * @param array $analyticsTypes
      * @return string
      */
-    public function getEventData(array $analyticsTypes): string
+    public function getEventsData(array $analyticsTypes): string
     {
         $map = [
             'product'       => fn() => $this->getProductKey(),
@@ -114,7 +114,7 @@ class PersonalMerchandisingAnalytics implements ArgumentInterface
             'session_start' => fn() => 'session_start',
         ];
 
-        $eventData = array_map(
+        $eventsData = array_map(
             fn($type) => [
                 'type'  => $type,
                 'value' => ($map[$type] ?? fn() => '')(),
@@ -122,6 +122,6 @@ class PersonalMerchandisingAnalytics implements ArgumentInterface
             $analyticsTypes
         );
 
-        return $this->jsonSerializer->serialize($eventData);
+        return $this->jsonSerializer->serialize($eventsData);
     }
 }

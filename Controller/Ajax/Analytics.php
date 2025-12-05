@@ -60,17 +60,17 @@ class Analytics extends Action
         }
 
         $request = $this->getRequest();
-        $eventData = $request->getParam('eventData');
+        $eventsData = $request->getParam('eventsData');
 
         //hyva theme
         // @phpstan-ignore-next-line
-        if (empty($eventData) && !empty($request->getContent())) {
+        if (empty($eventsData) && !empty($request->getContent())) {
             // @phpstan-ignore-next-line
             $content = $this->jsonSerializer->unserialize($request->getContent());
-            $eventData = $content['eventData'] ?? null;
+            $eventsData = $content['eventsData'] ?? null;
         }
 
-        if (empty($eventData)) {
+        if (empty($eventsData)) {
             return $result->setData(['success' => false, 'message' => 'Missing required parameters.']);
         }
 
@@ -79,8 +79,8 @@ class Analytics extends Action
         $tweakwiseRequest->setProfileKey($profileKey);
 
         try {
-            foreach ($eventData as $data) {
-                $this->processAnalyticsRequest($data);
+            foreach ($eventsData as $eventData) {
+                $this->processAnalyticsRequest($eventData);
             }
             return $result->setData(['success' => true]);
         } catch (Exception $e) {
@@ -94,7 +94,7 @@ class Analytics extends Action
     /**
      * Process the analytics request based on type and value.
      * @param array $eventData
-     * @throws InvalidArgumentException
+     * @throws NoSuchEntityException
      */
     private function processAnalyticsRequest(array $eventData): void
     {

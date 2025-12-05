@@ -11,7 +11,7 @@ use Tweakwise\Magento2Tweakwise\ViewModel\PersonalMerchandisingAnalytics;
 /** @var PersonalMerchandisingAnalytics $viewModel */
 $viewModel = $block->getData('viewModel');
 $analyticsTypes = $block->getData('analyticsTypes');
-$eventData = $viewModel->getEventData($analyticsTypes);
+$eventsData = $viewModel->getEventsData($analyticsTypes);
 
 /** @var NavigationConfig $tweakwiseNavigationConfig */
 $tweakwiseNavigationConfig = $block->getData('tweakwise_navigation_config');
@@ -22,7 +22,7 @@ $jsFormConfig = $tweakwiseNavigationConfig ? $tweakwiseNavigationConfig->getJsFo
     {
         "*": {
             "Tweakwise_Magento2Tweakwise/js/analytics": {
-                "eventData": <?= $eventData ?>,
+                "eventsData": <?= $eventsData ?>,
                 "bindItemClickEventsConfig": {
                     "productListSelector": "<?= $escaper->escapeHtmlAttr($jsFormConfig['tweakwiseNavigationForm']['productListSelector'] ?? ''); ?>",
                     "productSelector": "<?= $escaper->escapeHtmlAttr($jsFormConfig['tweakwiseNavigationForm']['productSelector'] ?? ''); ?>",

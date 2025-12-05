@@ -36,7 +36,7 @@ define('Tweakwise_Magento2Tweakwise/js/analytics', ['jquery'], function($) {
                 url: config.analyticsEndpoint,
                 type: 'POST',
                 data: {
-                    eventData: [
+                    eventsData: [
                         {
                             type: 'itemclick',
                             value: productId,
@@ -60,9 +60,9 @@ define('Tweakwise_Magento2Tweakwise/js/analytics', ['jquery'], function($) {
     return function(config) {
         $(document).ready(function() {
 
-            if (config.eventData) {
+            if (config.eventsData) {
                 var requestData = {
-                    eventData: config.eventData
+                    eventsData: config.eventsData
                 };
 
                 $.ajax({
