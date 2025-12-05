@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Tweakwise\Magento2Tweakwise\ViewModel;
 
+use Magento\Framework\Serialize\Serializer\Json;
 use Magento\Framework\View\Element\Block\ArgumentInterface;
 use Tweakwise\Magento2Tweakwise\Model\Config;
 use Tweakwise\Magento2TweakwiseExport\Model\Helper;
@@ -18,18 +19,18 @@ use Magento\Framework\App\RequestInterface;
 class PersonalMerchandisingAnalytics implements ArgumentInterface
 {
     /**
-     * PersonalMerchandisingAnalytics constructor.
-     *
      * @param Config $tweakwiseConfig
      * @param Helper $helper
      * @param StoreManagerInterface $storeManager
      * @param RequestInterface $request
+     * @param Json $jsonSerializer
      */
     public function __construct(
         private readonly Config $tweakwiseConfig,
         private readonly Helper $helper,
         private readonly StoreManagerInterface $storeManager,
-        private readonly RequestInterface $request
+        private readonly RequestInterface $request,
+        private readonly Json $jsonSerializer,
     ) {
     }
 
@@ -115,5 +116,34 @@ class PersonalMerchandisingAnalytics implements ArgumentInterface
             'session_start' => 'session_start',
             default     => '',
         };
+    }
+
+    /**
+     * @param array $analyticsTypes
+     * @return string
+     */
+    public function getValues(array $analyticsTypes): string
+    {
+        $map = [
+            'product' => fn() => $this->getProductKey(),
+            'search' => fn() => $this->getSearchQuery(),
+            'itemclick' => fn() => $this->getTwRequestId(),
+            'session_start' => fn() => 'session_start',
+        ];
+
+        $values = array_map(
+            fn($type) => ($map[$type] ?? fn() => '')(),
+            array_combine($analyticsTypes, $analyticsTypes)
+        );
+
+        return $this->jsonSerializer->serialize($values);
+    }
+
+    /**
+     * @return Json
+     */
+    public function getJsonSerializer(): Json
+    {
+        return $this->jsonSerializer;
     }
 }

@@ -59,19 +59,17 @@ class Analytics extends Action
         }
 
         $request = $this->getRequest();
-        $type = $this->getRequest()->getParam('type');
-        $value = $this->getRequest()->getParam('value');
+        $values = $request->getParam('values');
 
         //hyva theme
         // @phpstan-ignore-next-line
-        if (empty($type) && !empty($request->getContent())) {
+        if (empty($values) && !empty($request->getContent())) {
             // @phpstan-ignore-next-line
             $content = $this->jsonSerializer->unserialize($request->getContent());
-            $type = $content['type'] ?? null;
-            $value = $content['value'] ?? null;
+            $values = $content['values'] ?? null;
         }
 
-        if (empty($type) || empty($value)) {
+        if (empty($values)) {
             return $result->setData(['success' => false, 'message' => 'Missing required parameters.']);
         }
 
@@ -80,7 +78,9 @@ class Analytics extends Action
         $tweakwiseRequest->setProfileKey($profileKey);
 
         try {
-            $this->processAnalyticsRequest($type, $value);
+            foreach ($values as $type => $value) {
+                $this->processAnalyticsRequest($type, $value);
+            }
             return $result->setData(['success' => true]);
         } catch (Exception $e) {
             return $result->setData(['success' => false, 'message' => $e->getMessage()]);
