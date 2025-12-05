@@ -5,6 +5,7 @@ namespace Tweakwise\Magento2Tweakwise\Controller\Ajax;
 use Magento\Framework\App\Action\Action;
 use Magento\Framework\App\Action\Context;
 use Magento\Framework\Controller\Result\JsonFactory;
+use Magento\Framework\Exception\NoSuchEntityException;
 use Tweakwise\Magento2Tweakwise\Model\Client;
 use Tweakwise\Magento2Tweakwise\Model\PersonalMerchandisingConfig;
 use Tweakwise\Magento2Tweakwise\Model\Client\RequestFactory;
@@ -59,17 +60,17 @@ class Analytics extends Action
         }
 
         $request = $this->getRequest();
-        $values = $request->getParam('values');
+        $eventData = $request->getParam('eventData');
 
         //hyva theme
         // @phpstan-ignore-next-line
-        if (empty($values) && !empty($request->getContent())) {
+        if (empty($eventData) && !empty($request->getContent())) {
             // @phpstan-ignore-next-line
             $content = $this->jsonSerializer->unserialize($request->getContent());
-            $values = $content['values'] ?? null;
+            $eventData = $content['eventData'] ?? null;
         }
 
-        if (empty($values)) {
+        if (empty($eventData)) {
             return $result->setData(['success' => false, 'message' => 'Missing required parameters.']);
         }
 
@@ -78,8 +79,8 @@ class Analytics extends Action
         $tweakwiseRequest->setProfileKey($profileKey);
 
         try {
-            foreach ($values as $type => $value) {
-                $this->processAnalyticsRequest($type, $value);
+            foreach ($eventData as $data) {
+                $this->processAnalyticsRequest($data);
             }
             return $result->setData(['success' => true]);
         } catch (Exception $e) {
@@ -92,18 +93,16 @@ class Analytics extends Action
 
     /**
      * Process the analytics request based on type and value.
-     *
-     * @param string $type
-     * @param string $value
-     *
+     * @param array $eventData
      * @throws InvalidArgumentException
      */
-    private function processAnalyticsRequest(string $type, string $value): void
+    private function processAnalyticsRequest(array $eventData): void
     {
         $profileKey = $this->config->getProfileKey();
         $tweakwiseRequest = $this->requestFactory->create();
         $tweakwiseRequest->setProfileKey($profileKey);
-        $storeId = (int)$this->storeManager->getStore()->getId();
+        $type = $eventData['type'];
+        $value = $eventData['value'];
 
         switch ($type) {
             case 'product':
@@ -113,7 +112,7 @@ class Analytics extends Action
                 $this->handleSearchType($tweakwiseRequest, $value);
                 break;
             case 'itemclick':
-                $this->handleItemClickType($tweakwiseRequest, $value, $storeId);
+                $this->handleItemClickType($tweakwiseRequest, $value, $eventData['requestId']);
                 break;
             case 'session_start':
                 if ($this->sessionStartEventCookieService->isSessionStartEventSent()) {
@@ -155,25 +154,16 @@ class Analytics extends Action
 
     /**
      * @param Request $tweakwiseRequest
-     * @param string  $value
-     * @param int     $storeId
-     *
-     * @throws InvalidArgumentException
+     * @param string $value
+     * @param string|null $requestId
      * @return void
+     * @throws NoSuchEntityException
      */
-    private function handleItemClickType(Request $tweakwiseRequest, string $value, int $storeId): void
+    private function handleItemClickType(Request $tweakwiseRequest, string $value, ?string $requestId): void
     {
-        $twRequestId = $this->getRequest()->getParam('requestId');
+        $storeId = (int)$this->storeManager->getStore()->getId();
 
-        //hyva theme
-        // @phpstan-ignore-next-line
-        if (empty($twRequestId) && !empty($this->getRequest()->getContent())) {
-            // @phpstan-ignore-next-line
-            $content = $this->jsonSerializer->unserialize($this->getRequest()->getContent());
-            $twRequestId = $content['requestId'] ?? null;
-        }
-
-        if (empty($twRequestId)) {
+        if (empty($requestId)) {
             throw new InvalidArgumentException('Missing requestId for itemclick.');
         }
 
@@ -182,7 +172,7 @@ class Analytics extends Action
             $value = $this->helper->getTweakwiseId($storeId, $value);
         }
 
-        $tweakwiseRequest->setParameter('requestId', $twRequestId);
+        $tweakwiseRequest->setParameter('requestId', $requestId);
         $tweakwiseRequest->setParameter('itemId', $value);
         $tweakwiseRequest->setPath('itemclick');
     }

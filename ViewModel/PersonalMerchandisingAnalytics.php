@@ -102,48 +102,26 @@ class PersonalMerchandisingAnalytics implements ArgumentInterface
     }
 
     /**
-     * Get the value based on the analytics type.
-     *
-     * @param string $analyticsType
-     * @return string
-     */
-    public function getValue(string $analyticsType): string
-    {
-        return match ($analyticsType) {
-            'product'   => $this->getProductKey(),
-            'search'    => $this->getSearchQuery(),
-            'itemclick' => $this->getTwRequestId(),
-            'session_start' => 'session_start',
-            default     => '',
-        };
-    }
-
-    /**
      * @param array $analyticsTypes
      * @return string
      */
-    public function getValues(array $analyticsTypes): string
+    public function getEventData(array $analyticsTypes): string
     {
         $map = [
-            'product' => fn() => $this->getProductKey(),
-            'search' => fn() => $this->getSearchQuery(),
-            'itemclick' => fn() => $this->getTwRequestId(),
+            'product'       => fn() => $this->getProductKey(),
+            'search'        => fn() => $this->getSearchQuery(),
+            'itemclick'     => fn() => $this->getTwRequestId(),
             'session_start' => fn() => 'session_start',
         ];
 
-        $values = array_map(
-            fn($type) => ($map[$type] ?? fn() => '')(),
-            array_combine($analyticsTypes, $analyticsTypes)
+        $eventData = array_map(
+            fn($type) => [
+                'type'  => $type,
+                'value' => ($map[$type] ?? fn() => '')(),
+            ],
+            $analyticsTypes
         );
 
-        return $this->jsonSerializer->serialize($values);
-    }
-
-    /**
-     * @return Json
-     */
-    public function getJsonSerializer(): Json
-    {
-        return $this->jsonSerializer;
+        return $this->jsonSerializer->serialize($eventData);
     }
 }

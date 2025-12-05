@@ -11,7 +11,7 @@ use Tweakwise\Magento2Tweakwise\ViewModel\PersonalMerchandisingAnalytics;
 /** @var PersonalMerchandisingAnalytics $viewModel */
 $viewModel = $block->getData('viewModel');
 $analyticsTypes = $block->getData('analyticsTypes');
-$values = $viewModel->getValues($analyticsTypes);
+$values = $viewModel->getEventData($analyticsTypes);
 
 /** @var NavigationConfig $tweakwiseNavigationConfig */
 $tweakwiseNavigationConfig = $block->getData('tweakwise_navigation_config');
