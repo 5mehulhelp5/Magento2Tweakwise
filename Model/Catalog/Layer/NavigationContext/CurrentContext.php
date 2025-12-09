@@ -74,8 +74,6 @@ class CurrentContext
         $headers = $this->getContext()->getResponse()->getValue('headers');
         $normalized = array_change_key_case($headers, CASE_LOWER);
 
-        $test = $normalized['twn-request-id'] ?? '';
-
         return $normalized['twn-request-id'][0] ?? '';
     }
 }
