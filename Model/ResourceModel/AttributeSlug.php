@@ -1,4 +1,4 @@
-<?php
+<?php // phpcs:ignore SlevomatCodingStandard.TypeHints.DeclareStrictTypes.DeclareStrictTypesMissing
 
 /**
  * Tweakwise (https://www.tweakwise.com/) - All Rights Reserved
@@ -9,7 +9,6 @@
 
 namespace Tweakwise\Magento2Tweakwise\Model\ResourceModel;
 
-use Tweakwise\Magento2Tweakwise\Api\Data\AttributeSlugInterface;
 use Magento\Framework\Model\ResourceModel\Db\AbstractDb;
 
 class AttributeSlug extends AbstractDb
@@ -21,7 +20,17 @@ class AttributeSlug extends AbstractDb
      */
     protected function _construct()
     {
-        $this->_init('tweakwise_attribute_slug', AttributeSlugInterface::ATTRIBUTE);
-        $this->_isPkAutoIncrement = false;
+        $this->_init('tweakwise_attribute_slug', 'id');
+        $this->_isPkAutoIncrement = true;
+    }
+
+    /**
+     * Truncate the attribute slug table
+     *
+     * @return void
+     */
+    public function truncateTable(): void
+    {
+        $this->getConnection()->truncateTable($this->getMainTable());
     }
 }

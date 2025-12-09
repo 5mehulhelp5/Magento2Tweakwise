@@ -1,4 +1,4 @@
-<?php
+<?php // phpcs:ignore SlevomatCodingStandard.TypeHints.DeclareStrictTypes.DeclareStrictTypesMissing
 
 namespace Tweakwise\Magento2Tweakwise\Model\Client\Request;
 
@@ -44,7 +44,6 @@ trait SearchRequestTrait
     {
         $this->setParameter('tn_q', $query);
         $this->setDefaultCategory();
-        $this->setSearchLanguage();
     }
 
     /**
@@ -52,10 +51,12 @@ trait SearchRequestTrait
      */
     protected function setDefaultCategory(): void
     {
-        if ($this->getParameter('tn_cid') === null) {
-            $rootCategoryId = $this->getStoreRootCategoryId() ?: 2;
-            $this->addCategoryFilter($rootCategoryId);
+        if ($this->getParameter('tn_cid') !== null) {
+            return;
         }
+
+        $rootCategoryId = $this->getStoreRootCategoryId() ? $this->getStoreRootCategoryId() : 2;
+        $this->addCategoryFilter($rootCategoryId);
     }
 
     /**
@@ -70,18 +71,5 @@ trait SearchRequestTrait
         }
 
         return null;
-    }
-
-    /**
-     * @return void
-     */
-    protected function setSearchLanguage(): void
-    {
-        $language = $this->config->getSearchLanguage();
-        if (!$language) {
-            return;
-        }
-
-        $this->setParameter('tn_lang', $language);
     }
 }

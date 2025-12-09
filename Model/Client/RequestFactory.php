@@ -1,4 +1,4 @@
-<?php
+<?php // phpcs:ignore SlevomatCodingStandard.TypeHints.DeclareStrictTypes.DeclareStrictTypesMissing
 
 /**
  * Tweakwise (https://www.tweakwise.com/) - All Rights Reserved
@@ -22,20 +22,14 @@ class RequestFactory
     protected $objectManager;
 
     /**
-     * @var string
-     */
-    protected $type;
-
-    /**
      * Factory constructor
      *
      * @param ObjectManagerInterface $objectManager
      * @param string $type
      */
-    public function __construct(ObjectManagerInterface $objectManager, $type = Request::class)
+    public function __construct(ObjectManagerInterface $objectManager, protected $type = Request::class)
     {
         $this->objectManager = $objectManager;
-        $this->type = $type;
     }
 
     /**
@@ -51,6 +45,7 @@ class RequestFactory
         if (!$request instanceof Request) {
             throw new InvalidArgumentException(sprintf('%s is not an instanceof %s', $this->type, Request::class));
         }
+        $request->setLanguage();
 
         return $request;
     }

@@ -1,4 +1,4 @@
-<?php
+<?php // phpcs:ignore SlevomatCodingStandard.TypeHints.DeclareStrictTypes.DeclareStrictTypesMissing
 
 /**
  * Tweakwise (https://www.tweakwise.com/) - All Rights Reserved
@@ -23,6 +23,7 @@ class CurrentContext
 
     /**
      * @param NavigationContext $context
+     * @return void
      */
     public function setContext(NavigationContext $context)
     {
@@ -31,10 +32,10 @@ class CurrentContext
 
     /**
      * @return NavigationContext
-     * @throws RuntimeException
      */
     public function getContext()
     {
+        // @phpstan-ignore-next-line
         if (!$this->context) {
             throw new RuntimeException(
                 sprintf(
@@ -71,7 +72,8 @@ class CurrentContext
     public function getTweakwiseRequestId(): string
     {
         $headers = $this->getContext()->getResponse()->getValue('headers');
+        $normalized = array_change_key_case($headers, CASE_LOWER);
 
-        return $headers['TWN-Request-ID'][0] ?? '';
+        return $normalized['twn-request-id'][0] ?? '';
     }
 }

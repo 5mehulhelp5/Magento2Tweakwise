@@ -1,4 +1,4 @@
-<?php
+<?php // phpcs:ignore SlevomatCodingStandard.TypeHints.DeclareStrictTypes.DeclareStrictTypesMissing
 
 /**
  * Tweakwise (https://www.tweakwise.com/) - All Rights Reserved
@@ -9,7 +9,6 @@
 
 namespace Tweakwise\Magento2Tweakwise\Model\Client\Request;
 
-use Magento\Framework\Exception\LocalizedException;
 use Tweakwise\Magento2Tweakwise\Model\Client\Request;
 use Tweakwise\Magento2Tweakwise\Model\Client\Response\ProductNavigationResponse;
 
@@ -31,12 +30,6 @@ class ProductNavigationRequest extends Request
     private const MAX_PRODUCTS = 1000;
 
     /**
-     * Sort order directions
-     */
-    private const SORT_ASC = 'ASC';
-    private const SORT_DESC = 'DESC';
-
-    /**
      * @var array
      */
     protected $hiddenParameters = [];
@@ -56,13 +49,19 @@ class ProductNavigationRequest extends Request
      */
     public function addAttributeFilter(string $attribute, $value)
     {
-        $this->addParameter('tn_fk_' . $attribute, trim($value));
+        $trimmed = trim((string)($value ?? ''));
+        if ($trimmed === '') {
+            return $this;
+        }
+
+        $this->addParameter('tn_fk_' . $attribute, trim((string)($value ?? '')));
         return $this;
     }
 
     /**
      * @param string $attribute
      * @param int $value
+     * @return void
      */
     public function addHiddenParameter(string $attribute, $value)
     {
@@ -89,6 +88,7 @@ class ProductNavigationRequest extends Request
         $page = (int) $page;
         $page = max(1, $page);
 
+        // @phpstan-ignore-next-line
         $this->setParameter('tn_p', $page);
         return $this;
     }
@@ -99,11 +99,13 @@ class ProductNavigationRequest extends Request
      */
     public function setLimit($limit)
     {
+        // @phpstan-ignore-next-line
         if ($limit === 'all') {
             $limit = self::MAX_PRODUCTS;
         }
 
         $limit = min($limit, self::MAX_PRODUCTS);
+        // @phpstan-ignore-next-line
         $this->setParameter('tn_ps', $limit);
         return $this;
     }
@@ -114,6 +116,7 @@ class ProductNavigationRequest extends Request
      */
     public function setTemplateId($templateId)
     {
+        // @phpstan-ignore-next-line
         $this->setParameter('tn_ft', $templateId);
         return $this;
     }
@@ -124,6 +127,7 @@ class ProductNavigationRequest extends Request
      */
     public function setSortTemplateId($templateId)
     {
+        // @phpstan-ignore-next-line
         $this->setParameter('tn_st', $templateId);
         return $this;
     }
@@ -134,6 +138,7 @@ class ProductNavigationRequest extends Request
      */
     public function setBuilderTemplateId($templateId): ProductNavigationRequest
     {
+        // @phpstan-ignore-next-line
         $this->setParameter('tn_b', $templateId);
         return $this;
     }
