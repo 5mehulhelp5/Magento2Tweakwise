@@ -97,9 +97,9 @@ When the product list is loaded in such a manner the result will not be cacheabl
 13) Only show products from current category for featured products: Show product from current category in featured products.
 14) Limit group code recommendations: If group code is used for one/more recommendations, limit the total number of products returned. If empty or 0, all products are returned.  
 
-## Cron
-There is an cron for regenerting filter urls. This is only relevant when using SEO path slug urls. Only run this cron to regenerate the urls if you have problems.
-Running this cron may change the filter urls and thus may have SEO implications. The cron can be run manually using:
+## Command
+There is an command for regenerting filter urls. This is only relevant when using SEO path slug urls. Only run this command to regenerate the urls if you have problems.
+Running this command may change the filter urls and thus may have SEO implications. The command can be run manually using:
 ```sh
 php bin/magento tweakwise:regenerate-filter-urls
 ```
