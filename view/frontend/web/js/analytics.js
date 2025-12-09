@@ -82,7 +82,7 @@ define('Tweakwise_Magento2Tweakwise/js/analytics', ['jquery'], function($) {
                     return;
                 }
 
-                productList.on('click', $(bindConfig.productsGridSelector), function(event) {
+                productList.on('click', $(bindConfig.productListSelector), function(event) {
                     handleItemClick(event, bindConfig);
                 });
             }
