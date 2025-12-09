@@ -9,6 +9,7 @@ use Magento\Framework\Exception\InputException;
 use Magento\Framework\Stdlib\Cookie\CookieMetadataFactory;
 use Magento\Framework\Stdlib\Cookie\CookieSizeLimitReachedException;
 use Magento\Framework\Stdlib\Cookie\FailureToSendException;
+use Magento\Framework\Stdlib\Cookie\PublicCookieMetadata;
 use Magento\Framework\Stdlib\CookieManagerInterface;
 use Psr\Log\LoggerInterface;
 use Tweakwise\Magento2Tweakwise\Model\Client\Request;
@@ -55,17 +56,28 @@ class SessionStartEventService
     /**
      * @return void
      */
+    public function deleteSessionStartEventSentCookie(): void
+    {
+        try {
+            $this->cookieManager->deleteCookie(self::SESSION_START_EVENT_SENT_COOKIE_NAME, $this->getCookieMetaData());
+        } catch (InputException | FailureToSendException $e) {
+            $this->logger->error(
+                sprintf('Could not delete %s cookie', self::SESSION_START_EVENT_SENT_COOKIE_NAME),
+                ['message' => $e->getMessage()]
+            );
+        }
+    }
+
+    /**
+     * @return void
+     */
     protected function setSessionStartEventSentCookie(): void
     {
         try {
             $this->cookieManager->setPublicCookie(
                 self::SESSION_START_EVENT_SENT_COOKIE_NAME,
                 '1',
-                $this->cookieMetadataFactory
-                    ->createPublicCookieMetadata()
-                    ->setDuration(86400)
-                    ->setPath('/')
-                    ->setSecure(true)
+                $this->getCookieMetaData()
             );
         } catch (InputException | CookieSizeLimitReachedException | FailureToSendException $e) {
             $this->logger->error(
@@ -73,5 +85,17 @@ class SessionStartEventService
                 ['message' => $e->getMessage()]
             );
         }
+    }
+
+    /**
+     * @return PublicCookieMetadata
+     */
+    protected function getCookieMetaData(): PublicCookieMetadata
+    {
+        return $this->cookieMetadataFactory
+            ->createPublicCookieMetadata()
+            ->setDuration(86400)
+            ->setPath('/')
+            ->setSecure(true);
     }
 }
