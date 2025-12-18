@@ -52,8 +52,13 @@ class RecommendationsResponse extends Response
         if (!empty($recommendation) && !isset($recommendation['items'])) {
             // In this case multiple recommendations are given (group code)
             $recommendations = $recommendation;
+            $items = [];
             foreach ($recommendations as $recommendationEntry) {
-                $this->setData($recommendationEntry);
+                $items[] = $recommendationEntry['items']['item'];
+            }
+
+            if (!empty($items)) {
+                $this->setValue('items', $items);
             }
 
             return;
