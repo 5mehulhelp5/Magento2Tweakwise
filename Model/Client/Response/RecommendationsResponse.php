@@ -54,11 +54,20 @@ class RecommendationsResponse extends Response
             $recommendations = $recommendation;
             $items = [];
             foreach ($recommendations as $recommendationEntry) {
-                $items[] = $recommendationEntry['items']['item'];
+                $this->setData($recommendationEntry);
+                $currentItems = $this->data['items'] ?? [];
+
+                foreach ($currentItems as $currentItem) {
+                    if (isset($items[$currentItem->getId()])) {
+                        continue;
+                    }
+
+                    $items[$currentItem->getId()] = $currentItem;
+                }
             }
 
             if (!empty($items)) {
-                $this->setValue('items', $items);
+                $this->data['items'] = $items;
             }
 
             return;
