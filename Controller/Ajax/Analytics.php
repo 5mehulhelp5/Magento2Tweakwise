@@ -7,6 +7,7 @@ use Magento\Framework\App\Action\Context;
 use Magento\Framework\Controller\Result\JsonFactory;
 use Magento\Framework\Exception\NoSuchEntityException;
 use Tweakwise\Magento2Tweakwise\Model\Client;
+use Tweakwise\Magento2Tweakwise\Model\Client\Request\AnalyticsRequest;
 use Tweakwise\Magento2Tweakwise\Model\PersonalMerchandisingConfig;
 use Tweakwise\Magento2Tweakwise\Model\Client\RequestFactory;
 use Magento\Framework\App\ResponseInterface;
@@ -99,6 +100,7 @@ class Analytics extends Action
     private function processAnalyticsRequest(array $eventData): void
     {
         $profileKey = $this->config->getProfileKey();
+        /** @var AnalyticsRequest $tweakwiseRequest */
         $tweakwiseRequest = $this->requestFactory->create();
         $tweakwiseRequest->setProfileKey($profileKey);
         $type = $eventData['type'];

@@ -16,12 +16,4 @@
         <observer name="Tweakwise_Magento2Tweakwise_Observer_Event_SendAddToWishlistEvent"
                   instance="Tweakwise\Magento2Tweakwise\Observer\Event\SendAddToWishlistEvent"/>
     </event>
-    <event name="customer_login">
-        <observer name="Tweakwise_Magento2Tweakwise_Observer_Event_DeleteSessionStartEventSentCookieOnLogin"
-                  instance="Tweakwise\Magento2Tweakwise\Observer\Event\DeleteSessionStartEventSentCookie" />
-    </event>
-    <event name="customer_logout">
-        <observer name="Tweakwise_Magento2Tweakwise_Observer_Event_DeleteSessionStartEventSentCookieOnLogout"
-                  instance="Tweakwise\Magento2Tweakwise\Observer\Event\DeleteSessionStartEventSentCookie" />
-    </event>
 </config>

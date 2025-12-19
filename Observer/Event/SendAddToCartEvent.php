@@ -7,7 +7,6 @@ namespace Tweakwise\Magento2Tweakwise\Observer\Event;
 use Exception;
 use Magento\Catalog\Api\Data\ProductInterface;
 use Magento\Catalog\Model\Product;
-use Magento\Checkout\Model\Session;
 use Magento\Framework\Event\ObserverInterface;
 use Magento\Framework\Event\Observer;
 use Magento\Framework\Exception\NoSuchEntityException;
@@ -29,7 +28,6 @@ class SendAddToCartEvent implements ObserverInterface
      * @param LoggerInterface $logger
      * @param Helper $helper
      * @param StoreManagerInterface $storeManager
-     * @param Session $checkoutSession
      */
     public function __construct(
         private readonly PersonalMerchandisingConfig $config,
@@ -38,7 +36,6 @@ class SendAddToCartEvent implements ObserverInterface
         private readonly LoggerInterface $logger,
         private readonly Helper $helper,
         private readonly StoreManagerInterface $storeManager,
-        private readonly Session $checkoutSession,
     ) {
     }
 
@@ -75,8 +72,9 @@ class SendAddToCartEvent implements ObserverInterface
         $tweakwiseRequest = $this->requestFactory->create();
         $totalAmount = $quoteItem->getQtyToAdd() * $product->getPriceModel()->getFinalPrice($quoteItem->getQtyToAdd(), $product);
 
+        $profileKey = $this->config->getProfileKey();
         $tweakwiseRequest->setParameter('ProfileKey', $this->config->getProfileKey());
-        $tweakwiseRequest->setParameter('SessionKey', $this->checkoutSession->getSessionId());
+        $tweakwiseRequest->setParameter('SessionKey', $profileKey);
         $tweakwiseRequest->setParameter(
             'ProductKey',
             $this->helper->getTweakwiseId(

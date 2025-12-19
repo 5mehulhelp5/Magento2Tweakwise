@@ -110,7 +110,6 @@ class PersonalMerchandisingAnalytics implements ArgumentInterface
         $map = [
             'product'       => fn() => $this->getProductKey(),
             'search'        => fn() => $this->getSearchQuery(),
-            'itemclick'     => fn() => $this->getTwRequestId(),
             'session_start' => fn() => 'session_start',
         ];
 
