@@ -15,7 +15,7 @@ $eventsData = $viewModel->getEventsData($analyticsTypes);
 
 /** @var NavigationConfig $tweakwiseNavigationConfig */
 $tweakwiseNavigationConfig = $block->getData('tweakwise_navigation_config');
-$jsFormConfig = $tweakwiseNavigationConfig ? $tweakwiseNavigationConfig->getJsFormConfig() : [];
+$jsFormConfig = $tweakwiseNavigationConfig ? json_decode($tweakwiseNavigationConfig->getJsFormConfig()) : [];
 ?>
 
 <script type="text/x-magento-init">
@@ -24,10 +24,10 @@ $jsFormConfig = $tweakwiseNavigationConfig ? $tweakwiseNavigationConfig->getJsFo
             "Tweakwise_Magento2Tweakwise/js/analytics": {
                 "eventsData": <?= $eventsData ?>,
                 "bindItemClickEventsConfig": {
-                    "productListSelector": "<?= $escaper->escapeHtmlAttr($jsFormConfig['tweakwiseNavigationForm']['productListSelector'] ?? ''); ?>",
-                    "productSelector": "<?= $escaper->escapeHtmlAttr($jsFormConfig['tweakwiseNavigationForm']['productSelector'] ?? ''); ?>",
-                    "analyticsEndpoint": "<?= $escaper->escapeHtmlAttr($jsFormConfig['tweakwiseNavigationForm']['analyticsEndpoint'] ?? ''); ?>",
-                    "twRequestId": "<?= $escaper->escapeHtmlAttr($jsFormConfig['tweakwiseNavigationForm']['twRequestId'] ?? ''); ?>"
+                    "productListSelector": "<?= $escaper->escapeHtmlAttr($jsFormConfig->tweakwiseNavigationForm->productListSelector ?? ''); ?>",
+                    "productSelector": "<?= $escaper->escapeHtmlAttr($jsFormConfig->tweakwiseNavigationForm->productSelector ?? ''); ?>",
+                    "analyticsEndpoint": "<?= /* @noEscape */ $jsFormConfig->tweakwiseNavigationForm->analyticsEndpoint ?? ''; ?>",
+                    "twRequestId": "<?= $escaper->escapeHtmlAttr($jsFormConfig->tweakwiseNavigationForm->twRequestId ?? ''); ?>"
                 }
             }
         }
