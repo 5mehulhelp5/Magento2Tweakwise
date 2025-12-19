@@ -132,36 +132,38 @@ class Analytics extends Action
 
     /**
      * @param Request $tweakwiseRequest
-     * @param string  $value
+     * @param string $productKey
      *
      * @return void
      */
-    private function handleProductType(Request $tweakwiseRequest, string $value): void
+    private function handleProductType(Request $tweakwiseRequest, string $productKey): void
     {
-        $tweakwiseRequest->setParameter('productKey', $value);
+        $tweakwiseRequest->setParameter('SessionKey', $this->sessionStartEventService->getSessionKey());
+        $tweakwiseRequest->setParameter('ProductKey', $productKey);
         $tweakwiseRequest->setPath('pageview');
     }
 
     /**
      * @param Request $tweakwiseRequest
-     * @param string  $value
+     * @param string $searchTerm
      *
      * @return void
      */
-    private function handleSearchType(Request $tweakwiseRequest, string $value): void
+    private function handleSearchType(Request $tweakwiseRequest, string $searchTerm): void
     {
-        $tweakwiseRequest->setParameter('searchTerm', $value);
+        $tweakwiseRequest->setParameter('SessionKey', $this->sessionStartEventService->getSessionKey());
+        $tweakwiseRequest->setParameter('SearchTerm', $searchTerm);
         $tweakwiseRequest->setPath('search');
     }
 
     /**
      * @param Request $tweakwiseRequest
-     * @param string $value
+     * @param string $itemId
      * @param string|null $requestId
      * @return void
      * @throws NoSuchEntityException
      */
-    private function handleItemClickType(Request $tweakwiseRequest, string $value, ?string $requestId): void
+    private function handleItemClickType(Request $tweakwiseRequest, string $itemId, ?string $requestId): void
     {
         $storeId = (int)$this->storeManager->getStore()->getId();
 
@@ -169,13 +171,14 @@ class Analytics extends Action
             throw new InvalidArgumentException('Missing requestId for itemclick.');
         }
 
-        if (ctype_digit($value)) {
+        if (ctype_digit($itemId)) {
             // @phpstan-ignore-next-line
-            $value = $this->helper->getTweakwiseId($storeId, $value);
+            $itemId = $this->helper->getTweakwiseId($storeId, $itemId);
         }
 
-        $tweakwiseRequest->setParameter('requestId', $requestId);
-        $tweakwiseRequest->setParameter('itemId', $value);
+        $tweakwiseRequest->setParameter('SessionKey', $this->sessionStartEventService->getSessionKey());
+        $tweakwiseRequest->setParameter('RequestId', $requestId);
+        $tweakwiseRequest->setParameter('ItemId', $itemId);
         $tweakwiseRequest->setPath('itemclick');
     }
 }
