@@ -32,7 +32,7 @@ class Analytics extends Action
      * @param Helper $helper
      * @param StoreManagerInterface $storeManager
      * @param JsonSerializer $jsonSerializer
-     * @param SessionStartEventService $sessionStartEventCookieService
+     * @param SessionStartEventService $sessionStartEventService
      */
     public function __construct(
         Context $context,
@@ -43,7 +43,7 @@ class Analytics extends Action
         private readonly Helper $helper,
         private readonly StoreManagerInterface $storeManager,
         private readonly JsonSerializer $jsonSerializer,
-        private readonly SessionStartEventService $sessionStartEventCookieService,
+        private readonly SessionStartEventService $sessionStartEventService,
     ) {
         parent::__construct($context);
     }
@@ -117,11 +117,11 @@ class Analytics extends Action
                 $this->handleItemClickType($tweakwiseRequest, $value, $eventData['requestId']);
                 break;
             case 'session_start':
-                if ($this->sessionStartEventCookieService->isSessionStartEventSent()) {
+                if ($this->sessionStartEventService->isSessionStartEventSent()) {
                     return;
                 }
 
-                $this->sessionStartEventCookieService->handleSessionStartType($tweakwiseRequest);
+                $this->sessionStartEventService->handleSessionStartType($tweakwiseRequest);
                 break;
             default:
                 throw new InvalidArgumentException('Invalid type parameter.');
