@@ -13,7 +13,7 @@ use Tweakwise\Magento2Tweakwise\Model\Client\RequestFactory;
 use Magento\Framework\App\ResponseInterface;
 use Magento\Framework\Controller\Result\Json;
 use Magento\Framework\Controller\ResultInterface;
-use Tweakwise\Magento2Tweakwise\Service\SessionStartEventService;
+use Tweakwise\Magento2Tweakwise\Service\Event\SessionStartEventService;
 use Tweakwise\Magento2TweakwiseExport\Model\Helper;
 use Magento\Store\Model\StoreManagerInterface;
 use Exception;

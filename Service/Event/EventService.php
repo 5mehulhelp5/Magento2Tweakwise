@@ -2,68 +2,68 @@
 
 declare(strict_types=1);
 
-namespace Tweakwise\Magento2Tweakwise\Service;
+namespace Tweakwise\Magento2Tweakwise\Service\Event;
 
 use Magento\Framework\Exception\InputException;
+use Magento\Framework\Exception\LocalizedException;
+use Magento\Framework\Math\Random;
 use Magento\Framework\Stdlib\Cookie\CookieMetadataFactory;
 use Magento\Framework\Stdlib\Cookie\CookieSizeLimitReachedException;
 use Magento\Framework\Stdlib\Cookie\FailureToSendException;
 use Magento\Framework\Stdlib\Cookie\PublicCookieMetadata;
 use Magento\Framework\Stdlib\CookieManagerInterface;
 use Psr\Log\LoggerInterface;
-use Tweakwise\Magento2Tweakwise\Model\Client\Request\AnalyticsRequest;
 
-class SessionStartEventService
+class EventService
 {
-    private const SESSION_START_EVENT_SENT_COOKIE_NAME = 'tw_session_start_event_sent';
+    private const TWEAKWISE_SESSION_KEY_COOKIE_NAME = 'tw_session_key';
+
+    /**
+     * @var string|null
+     */
+    private ?string $sessionKey = null;
 
     /**
      * @param CookieManagerInterface $cookieManager
      * @param CookieMetadataFactory $cookieMetadataFactory
      * @param LoggerInterface $logger
+     * @param Random $mathRandom
      */
     public function __construct(
         private readonly CookieManagerInterface $cookieManager,
         private readonly CookieMetadataFactory $cookieMetadataFactory,
         private readonly LoggerInterface $logger,
+        private readonly Random $mathRandom,
     ) {
     }
 
     /**
-     * @param AnalyticsRequest $tweakwiseRequest
-     * @return void
+     * @return string
      */
-    public function handleSessionStartType(AnalyticsRequest $tweakwiseRequest): void
+    public function getSessionKey(): string
     {
-        $tweakwiseRequest->setParameter('SessionKey', $tweakwiseRequest->getProfileKey());
-        $tweakwiseRequest->setParameter('Source', 'magento2');
-        $tweakwiseRequest->setPath('sessionstart');
+        if ($this->sessionKey === null) {
+            $this->sessionKey = $this->cookieManager->getCookie(self::TWEAKWISE_SESSION_KEY_COOKIE_NAME);
+        }
 
-        $this->setSessionStartEventSentCookie();
-    }
-
-    /**
-     * @return bool
-     */
-    public function isSessionStartEventSent(): bool
-    {
-        return (bool) $this->cookieManager->getCookie(self::SESSION_START_EVENT_SENT_COOKIE_NAME);
+        return $this->sessionKey ?? '';
     }
 
     /**
      * @return void
      */
-    protected function setSessionStartEventSentCookie(): void
+    protected function setTweakwiseSessionKeyCookie(): void
     {
         try {
+            $this->sessionKey = $this->mathRandom->getUniqueHash();
             $this->cookieManager->setPublicCookie(
-                self::SESSION_START_EVENT_SENT_COOKIE_NAME,
-                '1',
+                self::TWEAKWISE_SESSION_KEY_COOKIE_NAME,
+                $this->sessionKey,
                 $this->getCookieMetaData()
             );
-        } catch (InputException | CookieSizeLimitReachedException | FailureToSendException $e) {
+        } catch (InputException | CookieSizeLimitReachedException | FailureToSendException | LocalizedException $e) {
             $this->logger->error(
-                sprintf('Could not set %s cookie', self::SESSION_START_EVENT_SENT_COOKIE_NAME),
+                sprintf('Could not set %s cookie', self::TWEAKWISE_SESSION_KEY_COOKIE_NAME),
                 ['message' => $e->getMessage()]
             );
         }
@@ -76,7 +76,6 @@ class SessionStartEventService
     {
         return $this->cookieMetadataFactory
             ->createPublicCookieMetadata()
-            ->setDuration(86400)
             ->setPath('/')
             ->setSecure(true);
     }

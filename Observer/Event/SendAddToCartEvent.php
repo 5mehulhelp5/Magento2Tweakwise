@@ -17,6 +17,7 @@ use Psr\Log\LoggerInterface;
 use Tweakwise\Magento2Tweakwise\Model\Client;
 use Tweakwise\Magento2Tweakwise\Model\Client\RequestFactory;
 use Tweakwise\Magento2Tweakwise\Model\PersonalMerchandisingConfig;
+use Tweakwise\Magento2Tweakwise\Service\Event\EventService;
 use Tweakwise\Magento2TweakwiseExport\Model\Helper;
 
 class SendAddToCartEvent implements ObserverInterface
@@ -28,6 +29,7 @@ class SendAddToCartEvent implements ObserverInterface
      * @param LoggerInterface $logger
      * @param Helper $helper
      * @param StoreManagerInterface $storeManager
+     * @param EventService $eventService
      */
     public function __construct(
         private readonly PersonalMerchandisingConfig $config,
@@ -36,6 +38,7 @@ class SendAddToCartEvent implements ObserverInterface
         private readonly LoggerInterface $logger,
         private readonly Helper $helper,
         private readonly StoreManagerInterface $storeManager,
+        private readonly EventService $eventService,
     ) {
     }
 
@@ -72,9 +75,8 @@ class SendAddToCartEvent implements ObserverInterface
         $tweakwiseRequest = $this->requestFactory->create();
         $totalAmount = $quoteItem->getQtyToAdd() * $product->getPriceModel()->getFinalPrice($quoteItem->getQtyToAdd(), $product);
 
-        $profileKey = $this->config->getProfileKey();
         $tweakwiseRequest->setParameter('ProfileKey', $this->config->getProfileKey());
-        $tweakwiseRequest->setParameter('SessionKey', $profileKey);
+        $tweakwiseRequest->setParameter('SessionKey', $this->eventService->getSessionKey());
         $tweakwiseRequest->setParameter(
             'ProductKey',
             $this->helper->getTweakwiseId(
