@@ -11,7 +11,7 @@ define('Tweakwise_Magento2Tweakwise/js/analytics', ['jquery'], function($) {
             let productId;
 
             if (!product || !product.id) {
-                const visual = $(event.target).closest('.visual');
+                let visual = $(event.target).closest('.visual');
                 if (!visual.length) {
                     const link = $(event.target).closest('a');
                     if (link.length) {
