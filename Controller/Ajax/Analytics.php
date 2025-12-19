@@ -75,10 +75,6 @@ class Analytics extends Action
             return $result->setData(['success' => false, 'message' => 'Missing required parameters.']);
         }
 
-        $profileKey = $this->config->getProfileKey();
-        $tweakwiseRequest = $this->requestFactory->create();
-        $tweakwiseRequest->setProfileKey($profileKey);
-
         try {
             foreach ($eventsData as $eventData) {
                 $this->processAnalyticsRequest($eventData);
