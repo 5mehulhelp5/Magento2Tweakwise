@@ -10,8 +10,6 @@ use Magento\Catalog\Model\Product;
 use Magento\Framework\Event\ObserverInterface;
 use Magento\Framework\Event\Observer;
 use Magento\Framework\Exception\NoSuchEntityException;
-use Magento\Quote\Api\Data\CartItemInterface;
-use Magento\Quote\Model\Quote\Item;
 use Magento\Store\Model\StoreManagerInterface;
 use Psr\Log\LoggerInterface;
 use Tweakwise\Magento2Tweakwise\Model\Client;
@@ -20,7 +18,7 @@ use Tweakwise\Magento2Tweakwise\Model\PersonalMerchandisingConfig;
 use Tweakwise\Magento2Tweakwise\Service\Event\EventService;
 use Tweakwise\Magento2TweakwiseExport\Model\Helper;
 
-class SendAddToCartEvent implements ObserverInterface
+class SendAddToWishlistEvent implements ObserverInterface
 {
     /**
      * @param PersonalMerchandisingConfig $config
@@ -53,40 +51,35 @@ class SendAddToCartEvent implements ObserverInterface
                 return;
             }
 
-            $this->sendAddToCartEvent($observer->getEvent()->getProduct(), $observer->getEvent()->getQuoteItem());
+            $this->sendAddToWishlistEvent($observer->getEvent()->getProduct());
         } catch (Exception $e) {
-            $this->logger->error('Tweakwise Add To Cart event could not be sent', ['message' => $e->getMessage()]);
+            $this->logger->error('Tweakwise Add To Wishlist event could not be sent', ['message' => $e->getMessage()]);
             return;
         }
     }
 
     /**
      * @param ProductInterface $product
-     * @param CartItemInterface $quoteItem
      * @return void
      * @throws NoSuchEntityException
      */
-    protected function sendAddToCartEvent(ProductInterface $product, CartItemInterface $quoteItem): void
+    protected function sendAddToWishlistEvent(ProductInterface $product): void
     {
-        if (!$product instanceof Product || !$quoteItem instanceof Item) {
+        if (!$product instanceof Product) {
             return;
         }
 
         $tweakwiseRequest = $this->requestFactory->create();
-        $totalAmount = $quoteItem->getQtyToAdd() * $product->getPriceModel()->getFinalPrice($quoteItem->getQtyToAdd(), $product);
-
         $tweakwiseRequest->setParameter('ProfileKey', $this->config->getProfileKey());
         $tweakwiseRequest->setParameter('SessionKey', $this->eventService->getSessionKey());
         $tweakwiseRequest->setParameter(
             'ProductKey',
             $this->helper->getTweakwiseId(
                 (int)$this->storeManager->getStore()->getId(),
-                (int)$quoteItem->getProductId()
+                (int)$product->getId()
             )
         );
-        $tweakwiseRequest->setParameter('Quantity', (string)$quoteItem->getQtyToAdd());
-        $tweakwiseRequest->setParameter('TotalAmount', (string)$totalAmount);
-        $tweakwiseRequest->setPath('addtocart');
+        $tweakwiseRequest->setPath('addtowishlist');
 
         $this->client->request($tweakwiseRequest);
     }
