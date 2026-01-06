@@ -67,11 +67,12 @@ class RecommendationsResponse extends Response
      */
     public function getItems(): array
     {
+        if (!$this->hasValue('items')) {
+            return [];
+        }
+        
         if ($this->config->isGroupedProductsEnabled() && !$this->proccessedGroupedProducts) {
             // Manually group items since recommendations doesn't have a grouped call yet.
-            if (!$this->hasValue('items')) {
-                return [];
-            }
 
             // @phpstan-ignore-next-line
             $items = parent::getItems();
