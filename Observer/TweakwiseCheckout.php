@@ -68,13 +68,25 @@ class TweakwiseCheckout implements ObserverInterface
         $tweakwiseRequest = $this->requestFactory->create();
 
         $tweakwiseRequest->setParameter('SessionKey', $this->eventService->getSessionKey());
-        $tweakwiseRequest->setParameter('ProfileKey', $profileKey);
+        $tweakwiseRequest->setProfileKey($profileKey);
         $tweakwiseRequest->setParameter('Revenue', (string)$totalExclTax);
         $tweakwiseRequest->setPath('purchase');
 
+        if ($this->config->isGroupedProductsEnabled()) {
+            $items = array_filter(
+                $items,
+                fn($item) => $item->getParentItem() !== null
+            );
+        } else {
+            $items = array_filter(
+                $items,
+                fn($item) => $item->getParentItem() === null
+            );
+        }
+
         // @phpstan-ignore-next-line
         foreach ($items as $item) {
-            $productTwId[] = $this->helper->getTweakwiseId($storeId, (int)$item->getProductId());
+            $productTwId[(int)$item->getProductId()] = $this->helper->getTweakwiseId($storeId, (int)$item->getProductId());
         }
 
         // @phpstan-ignore-next-line
