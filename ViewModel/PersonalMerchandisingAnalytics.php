@@ -61,7 +61,7 @@ class PersonalMerchandisingAnalytics implements ArgumentInterface
 
         try {
             $product = $this->product->getById($productId);
-            if ($product->getTypeId() == Type::TYPE_SIMPLE) {
+            if ($product->getTypeId() === Type::TYPE_SIMPLE) {
                 return $this->helper->getTweakwiseId((int)$storeId, (int)$productId);
             }
 
@@ -79,7 +79,6 @@ class PersonalMerchandisingAnalytics implements ArgumentInterface
                 $firstAssociatedProduct = reset($associatedProducts);
                 $productId = $firstAssociatedProduct->getId();
             }
-
         } catch (NoSuchEntityException $e) {
             // Do nothing
         }

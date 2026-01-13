@@ -69,8 +69,8 @@ class Response extends Type
                 $configurable['type'] = $simple['type'];
             }
 
-            if(!empty($simple['itemno'])) {
-                $configurable['tw_id'] = (int)\substr($simple['itemno'], 5);
+            if (!empty($simple['itemno'])) {
+                $configurable['tw_id'] = (int)substr($simple['itemno'], 5);
             }
 
             $items[] = $configurable;
