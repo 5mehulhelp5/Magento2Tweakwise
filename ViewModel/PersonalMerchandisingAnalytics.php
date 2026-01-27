@@ -69,7 +69,8 @@ class PersonalMerchandisingAnalytics implements ArgumentInterface
      * @param int $storeId
      * @return int
      */
-    private function getGroupedProductId(int $productId, int $storeId): int{
+    private function getGroupedProductId(int $productId, int $storeId): int
+    {
         try {
             $product = $this->productRepository->getById($productId);
             if ($product->getTypeId() === Type::TYPE_SIMPLE) {
