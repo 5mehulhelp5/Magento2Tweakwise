@@ -37,7 +37,7 @@ class PersonalMerchandisingAnalytics implements ArgumentInterface
         private readonly StoreManagerInterface $storeManager,
         private readonly RequestInterface $request,
         private readonly Json $jsonSerializer,
-        private readonly ProductRepositoryInterface $product,
+        private readonly ProductRepositoryInterface $productRepository,
     ) {
     }
 
@@ -59,8 +59,19 @@ class PersonalMerchandisingAnalytics implements ArgumentInterface
             return $this->helper->getTweakwiseId((int)$storeId, (int)$productId);
         }
 
+        return $this->getGroupedProductId((int)$productId, (int)$storeId);
+    }
+
+    /**
+     * Get the grouped product ID.
+     *
+     * @param int $productId
+     * @param int $storeId
+     * @return int
+     */
+    private function getGroupedProductId(int $productId, int $storeId): int{
         try {
-            $product = $this->product->getById($productId);
+            $product = $this->productRepository->getById($productId);
             if ($product->getTypeId() === Type::TYPE_SIMPLE) {
                 return $this->helper->getTweakwiseId((int)$storeId, (int)$productId);
             }
